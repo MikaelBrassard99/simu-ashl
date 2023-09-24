@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Draggable Columns</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <table>
+            <tr>
+                <td>
+                    <div class="column" id="column1">
+                        <h2>Column 1</h2>
+                        <div class="draggable" draggable="true">Item 1</div>
+                        <div class="draggable" draggable="true">Item 2</div>
+                    </div>
+                </td>
+                <td>        
+                    <div class="column" id="column2">
+                        <h2>Column 2</h2>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

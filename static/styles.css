@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+}
+
+.column {
+    flex: 1;
+    border: 2px dashed #ccc;
+    padding: 10px;
+    margin: 10px;
+    min-height: 200px;
+}
+
+.draggable {
+    background-color: #3498db;
+    color: #fff;
+    padding: 5px;
+    margin: 5px 0;
+    cursor: pointer;
+}
