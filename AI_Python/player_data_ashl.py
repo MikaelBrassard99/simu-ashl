@@ -13,7 +13,7 @@ from bokeh.models import CheckboxButtonGroup, CustomJS
 
 
 
-con = sqlite3.connect('ASHL12-STHS.db')
+con = sqlite3.connect('ASHL13-STHS.db')
 data_frame_forward = pd.read_sql_query('Select * from PlayerInfo where Retire == "False" and (PosC == "True" or PosLW == "True" or PosRW == "True")', con)
 data_frame_defence = pd.read_sql_query('Select * from PlayerInfo where Retire == "False" and PosD == "True"', con)
 
@@ -41,7 +41,7 @@ curdoc().theme = 'dark_minimal'
 source = ColumnDataSource(data=df1)
 LABELS = ["CK", "ST", "DI", "SK", "DF", "PH", "PA", "SC"]
 checkbox_button_group = CheckboxButtonGroup(labels=LABELS, active=[0, 1])
-checkbox_button_group.js_on_click(CustomJS(args=dict(source=source) , code="""
+checkbox_button_group.js_on_event("button_click", CustomJS(code="""
     const labels = ["CK", "ST", "DI", "SK", "DF", "PH", "PA", "SC"];
     source.data['St_Mik_off'] = [];
     for(var column in this.active){
@@ -59,6 +59,7 @@ checkbox_button_group.js_on_click(CustomJS(args=dict(source=source) , code="""
     console.log(source.data['St_Mik_off']);
     source.change.emit();
 """))
+# checkbox_button_group.js_on_click(CustomJS(args=dict(source=source) , ))
 color = linear_cmap(field_name='St_Mik_off', palette=Spectral6 ,low=np.min(source.data['St_Mik_off'][np.nonzero(source.data['St_Mik_off'])]) ,high=np.max(source.data['St_Mik_off']))
 color_bar = ColorBar(color_mapper=color['transform'], width=8)
 plot = figure(width=1500, height=1000, tools=[TOOLTIPS], title="Graphique des Attaquants")
@@ -94,7 +95,7 @@ curdoc().theme = 'dark_minimal'
 source_def = ColumnDataSource(data=df2)
 LABELS_def = ["CK", "ST", "DI", "SK", "DF", "PH", "PA", "SC"]
 checkbox_button_group_def = CheckboxButtonGroup(labels=LABELS_def, active=[0, 1])
-checkbox_button_group_def.js_on_click(CustomJS(args=dict(source=source_def) , code="""
+checkbox_button_group_def.js_on_event("button_click", CustomJS(code="""
     const labels = ["CK", "ST", "DI", "SK", "DF", "PH", "PA", "SC"];
     source.data['St_Mik_def'] = [];
     for(var column in this.active){
