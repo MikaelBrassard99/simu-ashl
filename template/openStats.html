@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>open STATS</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <br>
+    <br>
+    <h2>CSV Data</h2>
+    {{ table | safe }}
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

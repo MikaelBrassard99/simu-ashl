@@ -1,0 +1,59 @@
+from flask import Flask, render_template, json
+
+# importing pandas as pd
+import pandas as pd
+import sqlite3
+
+app = Flask(__name__, template_folder='template', static_folder='static')
+
+data = "test"
+
+
+@app.route("/")
+def main():
+    return render_template("main.html", python_variable=data)
+ 
+ 
+@app.route("/allStats")
+def allStats():
+    conn = sqlite3.connect('ASHL13-STHS.db')
+
+    #sql query to match PalyerInfo and PlayerStat who play Pro(status > 1) and have played a minimum of 1 game
+    queryGeneral = 'SELECT PLayerProStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PLayerProStat.GP, PLayerProStat.Shots, PLayerProStat.G, PLayerProStat.A, PLayerProStat.P, PLayerProStat.PlusMinus, PLayerProStat.Pim, PLayerProStat.ShotsBlock, PLayerProStat.OwnShotsBlock, PLayerProStat.OwnShotsMissGoal, PLayerProStat.Hits, PLayerProStat.HitsTook, PLayerProStat.GW, PLayerProStat.GT, PLayerProStat.FaceOffWon, PLayerProStat.FaceOffTotal, PLayerProStat.PPG, PLayerProStat.PPA, PLayerProStat.PPP, PLayerProStat.PPShots, PLayerProStat.PKG, PLayerProStat.PKA, PLayerProStat.PKP, PLayerProStat.PKShots, PLayerProStat.GiveAway, PLayerProStat.TakeAway, PLayerProStat.PuckPossesionTime  FROM PlayerProStat LEFT JOIN PlayerInfo ON PlayerProStat.Number = PlayerInfo.Number where PlayerProStat.GP <> 0 and PlayerInfo.Status1 > 1 and PLayerProStat.GP > 50'  # Change 'your_table_name' to the name of your table
+    queryForward = 'SELECT PLayerProStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PLayerProStat.GP, PLayerProStat.Shots, PLayerProStat.G, PLayerProStat.A, PLayerProStat.P, PLayerProStat.PlusMinus, PLayerProStat.Pim, PLayerProStat.ShotsBlock, PLayerProStat.OwnShotsBlock, PLayerProStat.OwnShotsMissGoal, PLayerProStat.Hits, PLayerProStat.HitsTook, PLayerProStat.GW, PLayerProStat.GT, PLayerProStat.FaceOffWon, PLayerProStat.FaceOffTotal, PLayerProStat.PPG, PLayerProStat.PPA, PLayerProStat.PPP, PLayerProStat.PPShots, PLayerProStat.PKG, PLayerProStat.PKA, PLayerProStat.PKP, PLayerProStat.PKShots, PLayerProStat.GiveAway, PLayerProStat.TakeAway, PLayerProStat.PuckPossesionTime  FROM PlayerProStat LEFT JOIN PlayerInfo ON PlayerProStat.Number = PlayerInfo.Number where PlayerProStat.GP <> 0 and PlayerInfo.Status1 > 1 and PlayerInfo.PosD = "False" and PLayerProStat.GP > 50'  # Change 'your_table_name' to the name of your table
+    queryDefence = 'SELECT PLayerProStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PLayerProStat.GP, PLayerProStat.Shots, PLayerProStat.G, PLayerProStat.A, PLayerProStat.P, PLayerProStat.PlusMinus, PLayerProStat.Pim, PLayerProStat.ShotsBlock, PLayerProStat.OwnShotsBlock, PLayerProStat.OwnShotsMissGoal, PLayerProStat.Hits, PLayerProStat.HitsTook, PLayerProStat.GW, PLayerProStat.GT, PLayerProStat.FaceOffWon, PLayerProStat.FaceOffTotal, PLayerProStat.PPG, PLayerProStat.PPA, PLayerProStat.PPP, PLayerProStat.PPShots, PLayerProStat.PKG, PLayerProStat.PKA, PLayerProStat.PKP, PLayerProStat.PKShots, PLayerProStat.GiveAway, PLayerProStat.TakeAway, PLayerProStat.PuckPossesionTime  FROM PlayerProStat LEFT JOIN PlayerInfo ON PlayerProStat.Number = PlayerInfo.Number where PlayerProStat.GP <> 0 and PlayerInfo.Status1 > 1 and PlayerInfo.PosD = "True" and PLayerProStat.GP > 50'  # Change 'your_table_name' to the name of your table
+    querySelectedPlayer = 'SELECT PLayerProStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PLayerProStat.GP, PLayerProStat.Shots, PLayerProStat.G, PLayerProStat.A, PLayerProStat.P, PLayerProStat.PlusMinus, PLayerProStat.Pim, PLayerProStat.ShotsBlock, PLayerProStat.OwnShotsBlock, PLayerProStat.OwnShotsMissGoal, PLayerProStat.Hits, PLayerProStat.HitsTook, PLayerProStat.GW, PLayerProStat.GT, PLayerProStat.FaceOffWon, PLayerProStat.FaceOffTotal, PLayerProStat.PPG, PLayerProStat.PPA, PLayerProStat.PPP, PLayerProStat.PPShots, PLayerProStat.PKG, PLayerProStat.PKA, PLayerProStat.PKP, PLayerProStat.PKShots, PLayerProStat.GiveAway, PLayerProStat.TakeAway, PLayerProStat.PuckPossesionTime  FROM PlayerProStat LEFT JOIN PlayerInfo ON PlayerProStat.Number = PlayerInfo.Number where PlayerInfo.Name = "Max Jones"'  # Change 'your_table_name' to the name of your table
+
+    # Read data into a DataFrame
+    df_gen = pd.read_sql(queryGeneral, conn)
+    df_Fwd = pd.read_sql(queryForward, conn)
+    df_Def = pd.read_sql(queryDefence, conn)
+    df_PlayerSel = pd.read_sql(querySelectedPlayer, conn)
+
+    conn.close()
+    # playerSelect = pd.read_sql(queryDefence, conn)
+    # conn.close() 
+
+    return render_template("allStats.html", league_data=df_gen, average_Def=generateStats(df_Def)[0], average_Fwd=generateStats(df_Fwd)[0], avg_league_stat_fwd=generateStats(df_Fwd)[1].to_json(orient='records'), playerSel_Stat = generateStats(df_PlayerSel)[1].to_json(orient='records'))
+
+@app.route("/openStats")
+def openStats():
+     # Read CSV file
+    df = pd.read_csv('static/open_one_time_covid_education_impact.csv')  #exemple for data analytics
+    
+    # Convert DataFrame to HTML table
+    html_table = df.to_html(index=False)
+
+    # Render HTML template with the HTML table
+    return render_template('openStats.html', table=html_table)
+  
+  
+#fonction generant les stats (average stats: prends les champs de la bd et realise la moyenne des données) et (tabledata: cree une table de donnée permettant de visualiser les stats moyenne)  
+def generateStats(data):
+    averageStat = data[['CK', 'FG', 'DI', 'SK', 'ST', 'EN', 'DU', 'PH', 'FO', 'PA', 'SC', 'DF', 'PS', 'EX', 'LD']].mean()
+    tableData = pd.DataFrame({'Cotes': ['CK', 'FG', 'DI', 'SK', 'ST', 'EN', 'DU', 'PH', 'FO', 'PA', 'SC', 'DF', 'PS', 'EX', 'LD'],
+                        'Moyenne': averageStat})
+    return tableData,averageStat
+
+if __name__ == "__main__":
+    app.run(debug=True)  # Enable debug mode

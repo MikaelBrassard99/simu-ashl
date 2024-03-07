@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>General STATS</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div>
+        <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+    </div>
+    <br>
+    <div id="myPlot" style="width:100%;max-width:700px"></div>
+    <br>
+    <dir>
+        <canvas id="programmingChart" style="width:100%;max-width:700px"></canvas>
+    </dir>
+    <br>
+    <figure class="highcharts-figure">
+        <div id="container"></div>
+        <p class="highcharts-description">
+            RÉPARTITION DES STATS DU JOUEUR...
+        </p>
+    </figure>
+    <br>
+    <div>
+        <canvas id="radarChart" width="700" height="300"></canvas>
+    </div>
+
+    <br>
+    <table>
+        <tr>
+            <td>
+                <div class="table-wrap">
+                    <head>Attaquants</head>
+                    <table border="1" class="sortable">
+                        <thead>
+                            <tr>
+                                {% for column in average_Fwd.columns %}
+                                <th>
+                                    {{ column }}
+                                </th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for index, row in average_Fwd.iterrows() %}
+                            <tr>
+                                {% for value in row %}
+                                <td>{{ value }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+            <td>
+                <div class="table-wrap">
+                    <head>Defenseur</head>
+                    <table border="1" class="sortable">
+                        <thead>
+                            <tr>
+                                {% for column in average_Def.columns %}
+                                <th>
+                                    {{ column }}
+                                </th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for index, row in average_Def.iterrows() %}
+                            <tr>
+                                {% for value in row %}
+                                <td>{{ value }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <br>
+
+    <br>
+    <div class="table-wrap">
+        <table border="1" class="sortable">
+            <thead>
+                <tr>
+                    {% for column in league_data.columns %}
+                    <th>
+                        {{ column }}
+                    </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, row in league_data.iterrows() %}
+                <tr>
+                    {% for value in row %}
+                    <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        //trow data to javascript function to update chart
+        var chart_avgFwdOV =  {{avg_league_stat_fwd|safe}}
+        var chart_playerStat =  {{playerSel_Stat|safe}}
+        //update chart with python values
+        playerChart.data.datasets.forEach((dataset) => {
+            if (dataset.label == "Stats joueur") {
+            dataset.data = (chart_playerStat);
+            } else {
+            dataset.data = (chart_avgFwdOV);
+            }
+        });
+        playerChart.update();
+    </script>
+</body>
+
+</html>
