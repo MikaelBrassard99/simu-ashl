@@ -1,6 +1,3 @@
-var script = document.createElement('script');
-script.src = 'https://code.jquery.com/jquery-3.6.3.min.js'; // Check https://jquery.com/ for the current version
-document.getElementsByTagName('head')[0].appendChild(script);
 var chart_playerStat = []
 var chart_avgFwdOV = []
 
@@ -123,7 +120,41 @@ var playerChart = new Chart("radarChart", {
   }
 });
 
+//get selected value from playerName scoll
+function getSelectedValue() {
+  // Make a POST AJAX call
+  // Get the select element
+  var selectElement = document.getElementById('playerSelected');
 
+  // Get the selected option
+  var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+  // Get the value of the selected option
+  var selectedValue = selectedOption.value;
+  $(document).ready(function () {
+    var value = selectedValue;
+    alert("Selected value: " + value);
+
+    $.ajax({
+      url: '/allStats',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(value),
+      success: function (response) {
+        $('#result').text('Processed value: ' + value);
+
+        //console.log('Server Response:', value);
+        // Handle success response if needed
+      },
+      error: function (xhr, status, error) {
+        //console.error('Error:', error);
+        // Handle error response if needed
+      }
+    });
+  });
+
+  // Display the selected value (for demonstration)
+}
 // Function to generate a random hexadecimal color code
 function getRandomColor() {
   // Generate a random number between 0 and 16777215 (hexadecimal FFFFFF)
