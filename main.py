@@ -76,8 +76,9 @@ def set_global(data_in):
 
 #fonction generant les stats (average stats: prends les champs de la bd et realise la moyenne des données) et (tabledata: cree une table de donnée permettant de visualiser les stats moyenne)  
 def generateStats(data):
-    averageStat = data[['CK', 'FG', 'DI', 'SK', 'ST', 'EN', 'DU', 'PH', 'FO', 'PA', 'SC', 'DF', 'PS', 'EX', 'LD']].mean()
-    tableData = pd.DataFrame({'Cotes': ['CK', 'FG', 'DI', 'SK', 'ST', 'EN', 'DU', 'PH', 'FO', 'PA', 'SC', 'DF', 'PS', 'EX', 'LD'],
+    statsOrder = ['FO', 'FG', 'CK', 'ST','EN', 'DU', 'SK', 'PH', 'PA', 'SC', 'DF', 'EX', 'LD', 'DI']
+    averageStat = data[statsOrder].mean()
+    tableData = pd.DataFrame({'Cotes': statsOrder,
                         'Moyenne': averageStat})
     return tableData,averageStat.to_json(orient='records')
 

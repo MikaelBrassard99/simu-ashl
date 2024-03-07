@@ -88,7 +88,7 @@ Highcharts.chart('container', {
 var playerChart = new Chart("radarChart", {
   type: 'radar',
   data: {
-    labels: ['CK', 'FG', 'DI', 'SK', 'ST', 'EN', 'DU', 'PH', 'FO', 'PA', 'SC', 'DF', 'PS', 'EX', 'LD', 'PO'],
+    labels: ['FO', 'FG', 'CK', 'ST','EN', 'DU', 'SK', 'PH', 'PA', 'SC', 'DF', 'EX', 'LD', 'DI'],
     datasets: [{
       label: 'Stats joueur',
       data: chart_playerStat,
