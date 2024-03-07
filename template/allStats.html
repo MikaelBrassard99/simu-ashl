@@ -33,11 +33,7 @@
         </p>
     </figure>
     <br>
-    <div>
-        <canvas id="radarChart" width="700" height="300"></canvas>
-    </div>
 
-    <br>
     <table>
         <tr>
             <td>
@@ -107,6 +103,11 @@
                     </table>
                 </div>
             </td>
+            <td>
+                <div>
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </td>
         </tr>
     </table>
 
@@ -139,34 +140,41 @@
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script>
-        var chart_playerStat = {{ playerSel_Stat| safe}};
-        var chart_avgFwdOV = {{ avg_league_stat_fwd| safe}};
-    
-    // Define a JavaScript function inside a <script> tag
-    function greet() {
-        
+        var chart_playerStat = [];
+        var chart_playerStatName = [];
+        var chart_avgStat = [];
+        var chart_avgStatLabel = "";
 
-        $.get('/updateChart', function(response) {
-        // Process the received JSON data
-        chart_playerStat = JSON.parse(response);
-        // Render DataFrame data in HTML table
-        });
 
-        //update chart with python values
-        playerChart.data.datasets.forEach((dataset) => {
-            if (dataset.label == "Stats joueur") {
-                dataset.data = (chart_playerStat);
-            } else {
-                dataset.data = (chart_avgFwdOV);
-            }
-        });
-        playerChart.update();
-    }
+        // Define a JavaScript function inside a <script> tag
+        function updateRadarChart() {
 
-    // Call the greet function every 5 seconds
-    setInterval(function() {
-        greet();
-    }, 1000); // 5000 milliseconds = 5 seconds
+
+            $.get('/updateChart', function (response) {
+                // Process the received JSON data
+                if (response !== null && typeof response !== 'undefined') {
+                    chart_playerStat = JSON.parse(response.values);
+                    chart_playerStatName = response.name;
+                    if (response.isDef == "True") {
+                        chart_avgStat = {{ avg_league_stat_def | safe }};
+                        chart_avgStatLabel = "Moyenne def";
+                    } else {
+                        chart_avgStat = {{ avg_league_stat_fwd | safe }};
+                        chart_avgStatLabel = "Moyenne att";
+                    }
+                }
+                playerChart.data.datasets[0].label = chart_playerStatName;
+                playerChart.data.datasets[0].data = chart_playerStat;
+                playerChart.data.datasets[1].label = chart_avgStatLabel;
+                playerChart.data.datasets[1].data = chart_avgStat;
+            });
+            playerChart.update();
+        }
+
+        // Call the greet function every 5 seconds
+        setInterval(function () {
+            updateRadarChart();
+        }, 1000); // 5000 milliseconds = 5 seconds
 
     </script>
 </body>

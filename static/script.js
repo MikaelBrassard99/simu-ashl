@@ -133,10 +133,10 @@ function getSelectedValue() {
   var selectedValue = selectedOption.value;
   $(document).ready(function () {
     var value = selectedValue;
-    alert("Selected value: " + value);
+    //alert("Selected value: " + value);
 
     $.ajax({
-      url: '/allStats',
+      url: '/updateChart',
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify(value),

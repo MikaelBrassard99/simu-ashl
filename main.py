@@ -13,13 +13,9 @@ def main():
     return render_template("main.html", python_variable=data)
  
  
-@app.route("/allStats", methods=['GET', 'POST'])
+@app.route("/allStats")
 def allStats():
-   
-    try:
-        set_global(request.json)
-    except:
-        print("An exception occurred")    
+  
     conn = sqlite3.connect('ASHL13-STHS.db')
 
     #sql query to match PalyerInfo and PlayerStat who play Pro(status > 1) and have played a minimum of 1 game
@@ -27,29 +23,23 @@ def allStats():
     queryForward = 'SELECT PLayerProStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PLayerProStat.GP, PLayerProStat.Shots, PLayerProStat.G, PLayerProStat.A, PLayerProStat.P, PLayerProStat.PlusMinus, PLayerProStat.Pim, PLayerProStat.ShotsBlock, PLayerProStat.OwnShotsBlock, PLayerProStat.OwnShotsMissGoal, PLayerProStat.Hits, PLayerProStat.HitsTook, PLayerProStat.GW, PLayerProStat.GT, PLayerProStat.FaceOffWon, PLayerProStat.FaceOffTotal, PLayerProStat.PPG, PLayerProStat.PPA, PLayerProStat.PPP, PLayerProStat.PPShots, PLayerProStat.PKG, PLayerProStat.PKA, PLayerProStat.PKP, PLayerProStat.PKShots, PLayerProStat.GiveAway, PLayerProStat.TakeAway, PLayerProStat.PuckPossesionTime  FROM PlayerProStat LEFT JOIN PlayerInfo ON PlayerProStat.Number = PlayerInfo.Number where PlayerProStat.GP <> 0 and PlayerInfo.Status1 > 1 and PlayerInfo.PosD = "False" and PLayerProStat.GP > 50'  # Change 'your_table_name' to the name of your table
     queryDefence = 'SELECT PLayerProStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PLayerProStat.GP, PLayerProStat.Shots, PLayerProStat.G, PLayerProStat.A, PLayerProStat.P, PLayerProStat.PlusMinus, PLayerProStat.Pim, PLayerProStat.ShotsBlock, PLayerProStat.OwnShotsBlock, PLayerProStat.OwnShotsMissGoal, PLayerProStat.Hits, PLayerProStat.HitsTook, PLayerProStat.GW, PLayerProStat.GT, PLayerProStat.FaceOffWon, PLayerProStat.FaceOffTotal, PLayerProStat.PPG, PLayerProStat.PPA, PLayerProStat.PPP, PLayerProStat.PPShots, PLayerProStat.PKG, PLayerProStat.PKA, PLayerProStat.PKP, PLayerProStat.PKShots, PLayerProStat.GiveAway, PLayerProStat.TakeAway, PLayerProStat.PuckPossesionTime  FROM PlayerProStat LEFT JOIN PlayerInfo ON PlayerProStat.Number = PlayerInfo.Number where PlayerProStat.GP <> 0 and PlayerInfo.Status1 > 1 and PlayerInfo.PosD = "True" and PLayerProStat.GP > 50'  # Change 'your_table_name' to the name of your table
 
-    if data:
-        querySelectedPlayer = f'SELECT PLayerProStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PLayerProStat.GP, PLayerProStat.Shots, PLayerProStat.G, PLayerProStat.A, PLayerProStat.P, PLayerProStat.PlusMinus, PLayerProStat.Pim, PLayerProStat.ShotsBlock, PLayerProStat.OwnShotsBlock, PLayerProStat.OwnShotsMissGoal, PLayerProStat.Hits, PLayerProStat.HitsTook, PLayerProStat.GW, PLayerProStat.GT, PLayerProStat.FaceOffWon, PLayerProStat.FaceOffTotal, PLayerProStat.PPG, PLayerProStat.PPA, PLayerProStat.PPP, PLayerProStat.PPShots, PLayerProStat.PKG, PLayerProStat.PKA, PLayerProStat.PKP, PLayerProStat.PKShots, PLayerProStat.GiveAway, PLayerProStat.TakeAway, PLayerProStat.PuckPossesionTime  FROM PlayerProStat LEFT JOIN PlayerInfo ON PlayerProStat.Number = PlayerInfo.Number where PlayerInfo.Name = "{data}"'  # Change 'your_table_name' to the name of your table
-    else:
-        querySelectedPlayer = 'SELECT PLayerProStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PLayerProStat.GP, PLayerProStat.Shots, PLayerProStat.G, PLayerProStat.A, PLayerProStat.P, PLayerProStat.PlusMinus, PLayerProStat.Pim, PLayerProStat.ShotsBlock, PLayerProStat.OwnShotsBlock, PLayerProStat.OwnShotsMissGoal, PLayerProStat.Hits, PLayerProStat.HitsTook, PLayerProStat.GW, PLayerProStat.GT, PLayerProStat.FaceOffWon, PLayerProStat.FaceOffTotal, PLayerProStat.PPG, PLayerProStat.PPA, PLayerProStat.PPP, PLayerProStat.PPShots, PLayerProStat.PKG, PLayerProStat.PKA, PLayerProStat.PKP, PLayerProStat.PKShots, PLayerProStat.GiveAway, PLayerProStat.TakeAway, PLayerProStat.PuckPossesionTime  FROM PlayerProStat LEFT JOIN PlayerInfo ON PlayerProStat.Number = PlayerInfo.Number where PlayerInfo.Name = "Max Jones"'  # Change 'your_table_name' to the name of your table
-
     df_gen = pd.read_sql(queryGeneral, conn)
     df_Fwd = pd.read_sql(queryForward, conn)
     df_Def = pd.read_sql(queryDefence, conn)
-    df_PlayerSel = pd.read_sql(querySelectedPlayer, conn)
-
+    
     # playerSelect = pd.read_sql(queryDefence, conn)
     # conn.close() 
 
-    return render_template("allStats.html", league_data=df_gen, average_Def=generateStats(df_Def)[0], average_Fwd=generateStats(df_Fwd)[0], avg_league_stat_fwd=generateStats(df_Fwd)[1], playerSel_Stat = generateStats(df_PlayerSel)[1], dataTest=data)
+    return render_template("allStats.html", league_data=df_gen, average_Def=generateStats(df_Def)[0], average_Fwd=generateStats(df_Fwd)[0], avg_league_stat_fwd=generateStats(df_Fwd)[1], avg_league_stat_def=generateStats(df_Def)[1])
         # Handle other request methods
         
-@app.route("/updateChart", methods=['GET'])
+@app.route("/updateChart", methods=['GET', 'POST'])
 def updateChart():
    
     try:
         set_global(request.json)
     except:
-        print("An exception occurred")    
+        print("An exc   eption occurred")    
     conn = sqlite3.connect('ASHL13-STHS.db')
 
     if data:
@@ -58,9 +48,13 @@ def updateChart():
         querySelectedPlayer = 'SELECT PLayerProStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PLayerProStat.GP, PLayerProStat.Shots, PLayerProStat.G, PLayerProStat.A, PLayerProStat.P, PLayerProStat.PlusMinus, PLayerProStat.Pim, PLayerProStat.ShotsBlock, PLayerProStat.OwnShotsBlock, PLayerProStat.OwnShotsMissGoal, PLayerProStat.Hits, PLayerProStat.HitsTook, PLayerProStat.GW, PLayerProStat.GT, PLayerProStat.FaceOffWon, PLayerProStat.FaceOffTotal, PLayerProStat.PPG, PLayerProStat.PPA, PLayerProStat.PPP, PLayerProStat.PPShots, PLayerProStat.PKG, PLayerProStat.PKA, PLayerProStat.PKP, PLayerProStat.PKShots, PLayerProStat.GiveAway, PLayerProStat.TakeAway, PLayerProStat.PuckPossesionTime  FROM PlayerProStat LEFT JOIN PlayerInfo ON PlayerProStat.Number = PlayerInfo.Number where PlayerInfo.Name = "Max Jones"'  # Change 'your_table_name' to the name of your table
 
     df_PlayerSel = pd.read_sql(querySelectedPlayer, conn)
+    
+    #verify if player is D or Fwd
+    print(df_PlayerSel['PosD'].values[0])
     # playerSelect = pd.read_sql(queryDefence, conn)
     # conn.close() 
-    return generateStats(df_PlayerSel)[1]
+    response_data = {'values':generateStats(df_PlayerSel)[1], 'isDef':df_PlayerSel['PosD'].values[0], 'name':df_PlayerSel['Name'].values[0]} 
+    return jsonify(response_data)
 
         
         
