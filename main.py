@@ -7,6 +7,8 @@ import sqlite3
 app = Flask(__name__, template_folder='template', static_folder='static')
 
 data = None
+generalStatsColumns = ['FO', 'FG', 'CK', 'ST','EN', 'DU', 'SK', 'PH', 'PA', 'SC', 'DF', 'EX', 'LD', 'DI']
+
 
 @app.route("/")
 def main():
@@ -30,7 +32,7 @@ def allStats():
     # playerSelect = pd.read_sql(queryDefence, conn)
     # conn.close() 
 
-    return render_template("allStats.html", league_data=df_gen, average_Def=generateStats(df_Def)[0], average_Fwd=generateStats(df_Fwd)[0], avg_league_stat_fwd=generateStats(df_Fwd)[1], avg_league_stat_def=generateStats(df_Def)[1])
+    return render_template("allStats.html", league_data=df_gen, average_Def=generateStats(df_Def, generalStatsColumns)[0], average_Fwd=generateStats(df_Fwd, generalStatsColumns)[0], avg_league_stat_fwd=generateStats(df_Fwd, generalStatsColumns)[1], avg_league_stat_def=generateStats(df_Def, generalStatsColumns)[1])
         # Handle other request methods
         
 @app.route("/updateChart", methods=['GET', 'POST'])
@@ -50,10 +52,9 @@ def updateChart():
     df_PlayerSel = pd.read_sql(querySelectedPlayer, conn)
     
     #verify if player is D or Fwd
-    print(df_PlayerSel['PosD'].values[0])
     # playerSelect = pd.read_sql(queryDefence, conn)
     # conn.close() 
-    response_data = {'values':generateStats(df_PlayerSel)[1], 'isDef':df_PlayerSel['PosD'].values[0], 'name':df_PlayerSel['Name'].values[0]} 
+    response_data = {'values':df_PlayerSel.to_json(orient='records'), 'labels': generalStatsColumns} 
     return jsonify(response_data)
 
         
@@ -75,8 +76,7 @@ def set_global(data_in):
     data = data_in  # Set the value of the global variable
 
 #fonction generant les stats (average stats: prends les champs de la bd et realise la moyenne des données) et (tabledata: cree une table de donnée permettant de visualiser les stats moyenne)  
-def generateStats(data):
-    statsOrder = ['FO', 'FG', 'CK', 'ST','EN', 'DU', 'SK', 'PH', 'PA', 'SC', 'DF', 'EX', 'LD', 'DI']
+def generateStats(data, statsOrder):
     averageStat = data[statsOrder].mean()
     tableData = pd.DataFrame({'Cotes': statsOrder,
                         'Moyenne': averageStat})

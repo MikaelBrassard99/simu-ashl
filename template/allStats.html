@@ -16,44 +16,27 @@
 </head>
 
 <body>
-    <div>
-        <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
-    </div>
-    <br>
-    <div id="myPlot" style="width:100%;max-width:700px"></div>
-    <br>
-    <dir>
-        <canvas id="programmingChart" style="width:100%;max-width:700px"></canvas>
-    </dir>
-    <br>
-    <figure class="highcharts-figure">
-        <div id="container"></div>
-        <p class="highcharts-description">
-            {{dataTest}}
-        </p>
-    </figure>
-    <br>
-
     <table>
         <tr>
             <td>
+                <!-- drop down player select -->
                 <div class="table-wrap">
-
                     <head>All player name</head>
                     <div class="menu">
-                        <select class="menu-item" id="playerSelected">
+                        <input placeholder="Enter some text" name="name" list="playerSelected" />
+                        <datalist id="playerSelected">
                             {% for index, row in league_data.iterrows() %}
-                            <option value="{{ row['Name'] }}" onclick="getSelectedValue()">
+                            <option value="{{ row['Name'] }}">
                                 {{ row['Name'] }}
                             </option>
                             {% endfor %}
-                        </select>
+                        </datalist>
                     </div>
                 </div>
             </td>
             <td>
+                <!-- stats gen off -->
                 <div class="table-wrap">
-
                     <head>Attaquants</head>
                     <table border="1" class="sortable">
                         <thead>
@@ -78,8 +61,8 @@
                 </div>
             </td>
             <td>
+                <!-- stats gen def -->
                 <div class="table-wrap">
-
                     <head>Defenseur</head>
                     <table border="1" class="sortable">
                         <thead>
@@ -104,6 +87,7 @@
                 </div>
             </td>
             <td>
+                <!-- player graph stats -->
                 <div>
                     <canvas id="radarChart"></canvas>
                 </div>
@@ -114,7 +98,8 @@
     <br>
 
     <br>
-    <div class="table-wrap">
+<    <!-- general player stats -->
+>    <div class="table-wrap">
         <table border="1" class="sortable">
             <thead>
                 <tr>
@@ -140,22 +125,29 @@
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script>
-        var chart_playerStat = [];
-        var chart_playerStatName = [];
+        var chart_playerSelStat = [];
+        var chart_playerSelStatFiltered = [];
         var chart_avgStat = [];
-        var chart_avgStatLabel = "";
-
-
+        var chart_labels = [];
         // Define a JavaScript function inside a <script> tag
         function updateRadarChart() {
-
-
             $.get('/updateChart', function (response) {
                 // Process the received JSON data
                 if (response !== null && typeof response !== 'undefined') {
-                    chart_playerStat = JSON.parse(response.values);
-                    chart_playerStatName = response.name;
-                    if (response.isDef == "True") {
+                    //all PlayerStat
+                    chart_playerSelStat = JSON.parse(response.values)[0];
+                    //get column to show in chart
+                    chart_labels = response.labels;
+                    //get name from player
+                    chart_playerStatName = chart_playerSelStat.Name;
+
+                    //get values from column
+                    for (let i = 0; i < chart_labels.length; i++) {
+                        chart_playerSelStatFiltered[i] = chart_playerSelStat[chart_labels[i]];
+                    } 
+                    //verify if player is D
+                    if (chart_playerSelStat.PosD == "True") {
+                        //get average static league stat from rendertemplate
                         chart_avgStat = {{ avg_league_stat_def | safe }};
                         chart_avgStatLabel = "Moyenne def";
                     } else {
@@ -163,19 +155,19 @@
                         chart_avgStatLabel = "Moyenne att";
                     }
                 }
-                playerChart.data.labels = ['FO', 'FG', 'CK', 'ST','EN', 'DU', 'SK', 'PH', 'PA', 'SC', 'DF', 'EX', 'LD', 'DI'];
+                playerChart.data.labels = chart_labels;
                 playerChart.data.datasets[0].label = chart_playerStatName;
-                playerChart.data.datasets[0].data = chart_playerStat;
+                playerChart.data.datasets[0].data = chart_playerSelStatFiltered;
                 playerChart.data.datasets[1].label = chart_avgStatLabel;
                 playerChart.data.datasets[1].data = chart_avgStat;
             });
             playerChart.update();
         }
 
-        // Call the greet function every 5 seconds
+        // Call the greet function every second
         setInterval(function () {
             updateRadarChart();
-        }, 1000); // 5000 milliseconds = 5 seconds
+        }, 1000);
 
     </script>
 </body>
