@@ -212,17 +212,22 @@ function updateRadarChart(avg_league_stat_def, avg_league_stat_fwd) {
         if (chart_playerSelStat.PosD == "True") {
           newValueTd =
             "(" + Math.round(valueOfPlayerSelectOV - valueAvgDef) + ")";
+          if((valueOfPlayerSelectOV - valueAvgDef)<0){document.getElementById(i + "_diff").style.color = "red";}
+          else{document.getElementById(i + "_diff").style.color = "green";}
         } else {
           newValueTd =
             "(" + Math.round(valueOfPlayerSelectOV - valueAvgOff) + ")";
+          if((valueOfPlayerSelectOV - valueAvgOff)<0){document.getElementById(i + "_diff").style.color = "red";}
+          else{document.getElementById(i + "_diff").style.color = "green";}
         }
         document.getElementById(i).innerHTML = valueOfPlayerSelectOV;
+
         document.getElementById(i + "_diff").innerHTML = newValueTd;
         document.getElementById(i + "_team").innerHTML = Math.round(valueOfPlayersTeamSelectOV);
-        console.log(chart_playerSelStat.PosD);
       }
     }
-    document.getElementById("Test").innerHTML = chart_playerTeamName;
+    document.getElementById("PlayerName").innerHTML = chart_playerStatName;
+    document.getElementById("TeamName").innerHTML = chart_playerTeamName;
     playerChart.data.labels = chart_labels;
     playerChart.data.datasets[0].label = chart_playerStatName;
     playerChart.data.datasets[0].data = chart_playerSelStatFiltered;
