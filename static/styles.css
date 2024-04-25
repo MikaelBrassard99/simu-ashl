@@ -82,3 +82,9 @@
     color: inherit;
     content: '\025B4';
  }
+
+ .radar_div{
+    left: 0%;
+    height: 25vh;
+    width: 25vw;
+ }

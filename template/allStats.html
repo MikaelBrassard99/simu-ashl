@@ -12,164 +12,146 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://d3js.org/d3.v7.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
 <body>
     <table>
-        <tr>
-            <td>
-                <!-- drop down player select -->
-                <div class="table-wrap">
-                    <head>All player name</head>
-                    <div class="menu">
-                        <input placeholder="Enter some text" name="name" list="playerSelected" />
-                        <datalist id="playerSelected">
-                            {% for index, row in league_data.iterrows() %}
-                            <option value="{{ row['Name'] }}">
-                                {{ row['Name'] }}
-                            </option>
-                            {% endfor %}
-                        </datalist>
-                    </div>
-                </div>
-            </td>
-            <td>
-                <!-- stats gen off -->
-                <div class="table-wrap">
-                    <head>Attaquants</head>
-                    <table border="1" class="sortable">
-                        <thead>
-                            <tr>
-                                {% for column in average_Fwd.columns %}
-                                <th>
-                                    {{ column }}
-                                </th>
-                                {% endfor %}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for index, row in average_Fwd.iterrows() %}
-                            <tr>
-                                {% for value in row %}
-                                <td>{{ value }}</td>
-                                {% endfor %}
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </td>
-            <td>
-                <!-- stats gen def -->
-                <div class="table-wrap">
-                    <head>Defenseur</head>
-                    <table border="1" class="sortable">
-                        <thead>
-                            <tr>
-                                {% for column in average_Def.columns %}
-                                <th>
-                                    {{ column }}
-                                </th>
-                                {% endfor %}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for index, row in average_Def.iterrows() %}
-                            <tr>
-                                {% for value in row %}
-                                <td>{{ value }}</td>
-                                {% endfor %}
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </td>
-            <td>
-                <!-- player graph stats -->
-                <div>
-                    <canvas id="radarChart"></canvas>
-                </div>
-            </td>
-        </tr>
+        <!-- drop down player select -->
+        <div class="table-wrap">
+
+            <head>All player name</head>
+            <div class="menu">
+                <input placeholder="Enter some text" name="name" list="playerSelected" />
+                <datalist id="playerSelected">
+                    {% for index, row in league_data.iterrows() %}
+                    <option value="{{ row['Name'] }}">
+                        {{ row['Name'] }}
+                    </option>
+                    {% endfor %}
+                </datalist>
+            </div>
+        </div>
+
+        <!-- stats gen off/def, repopulate tds when playerSelcted change -->
+        <div class="table-wrap">
+
+            <head>Attaquants/Defenseur</head>
+            <table border="1" class="sortable">
+                <thead>
+                    <tr>
+                        {% for index in average_Fwd.index %}
+                        <th>
+                            {{ index }}
+                        </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for row in average_Fwd %}
+                        <td id="{{loop.index - 1}}">{{ row }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        {% for row in average_Fwd %}
+                        <td id="{{loop.index - 1}}_diff"></td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <!-- dont display general stat of both defense and offensive player -->
+        <div class="table-wrap" style="display: none;">
+
+            <head>Attaquants</head>
+            <table border="1" class="sortable">
+                <thead>
+                    <tr>
+                        {% for index in average_Fwd.index %}
+                        <th>
+                            {{ index }}
+                        </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in average_Fwd %}
+                    <td id="{{loop.index - 1}}_off">{{ row }}</td>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- dont display general stat of both defense and offensive player -->
+
+        <div class="table-wrap" style="display: none;">
+
+            <head>Defenseurs</head>
+            <table border="1" class="sortable">
+                <thead>
+                    <tr>
+                        {% for index in average_Def.index %}
+                        <th>
+                            {{ index }}
+                        </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in average_Def %}
+                    <td id="{{loop.index - 1}}_def">{{ row }}</td>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+        <!-- stats gen team -->
+        <div class="table-wrap">
+
+            <p id="Test">Equipe</p>
+            <table border="1" class="sortable">
+                <thead>
+                    <tr>
+                        {% for index in average_Fwd.index %}
+                        <th>
+                            {{ index }}
+                        </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for row in average_Fwd %}
+                        <td id="{{loop.index - 1}}_team">{{ row }}</td>
+                        {% endfor %}
+                    </tr>
+                    <!-- <tr>
+                        {% for row in average_Fwd %}
+                        <td id="{{loop.index - 1}}_diff"></td>
+                        {% endfor %}
+                    </tr> -->
+                </tbody>
+            </table>
+        </div>
+        <!-- player graph stats -->
+        <div class="radar_div">
+            <canvas id="radarChart"></canvas>
+        </div>
     </table>
-
-    <br>
-
-    <br>
-<    <!-- general player stats -->
->    <div class="table-wrap">
-        <table border="1" class="sortable">
-            <thead>
-                <tr>
-                    {% for column in league_data.columns %}
-                    <th>
-                        {{ column }}
-                    </th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for index, row in league_data.iterrows() %}
-                <tr>
-                    {% for value in row %}
-                    <td>{{ value }}</td>
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-    <script>
-        var chart_playerSelStat = [];
-        var chart_playerSelStatFiltered = [];
-        var chart_avgStat = [];
-        var chart_labels = [];
-        // Define a JavaScript function inside a <script> tag
-        function updateRadarChart() {
-            $.get('/updateChart', function (response) {
-                // Process the received JSON data
-                if (response !== null && typeof response !== 'undefined') {
-                    //all PlayerStat
-                    chart_playerSelStat = JSON.parse(response.values)[0];
-                    //get column to show in chart
-                    chart_labels = response.labels;
-                    //get name from player
-                    chart_playerStatName = chart_playerSelStat.Name;
-
-                    //get values from column
-                    for (let i = 0; i < chart_labels.length; i++) {
-                        chart_playerSelStatFiltered[i] = chart_playerSelStat[chart_labels[i]];
-                    } 
-                    //verify if player is D
-                    if (chart_playerSelStat.PosD == "True") {
-                        //get average static league stat from rendertemplate
-                        chart_avgStat = {{ avg_league_stat_def | safe }};
-                        chart_avgStatLabel = "Moyenne def";
-                    } else {
-                        chart_avgStat = {{ avg_league_stat_fwd | safe }};
-                        chart_avgStatLabel = "Moyenne att";
-                    }
-                }
-                playerChart.data.labels = chart_labels;
-                playerChart.data.datasets[0].label = chart_playerStatName;
-                playerChart.data.datasets[0].data = chart_playerSelStatFiltered;
-                playerChart.data.datasets[1].label = chart_avgStatLabel;
-                playerChart.data.datasets[1].data = chart_avgStat;
-            });
-            playerChart.update();
-        }
-
-        // Call the greet function every second
-        setInterval(function () {
-            updateRadarChart();
-        }, 1000);
-
-    </script>
+    < <!-- general player stats -->
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
+        <script>
+            var avgdef = {{ avg_league_stat_def | safe }};
+            var avgatt = {{ avg_league_stat_fwd | safe }};
+            updateRadarChart(avgdef, avgatt);
+            function synchRadarChart() {
+                updateRadarChart(avgdef, avgatt);
+            }
+        </script>
 </body>
 
 </html>
