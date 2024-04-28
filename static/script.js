@@ -73,7 +73,7 @@ function getSelectedValue(selectedValue) {
         $("#result").text("Processed value: " + value);
         synchRadarChart();
       },
-      error: function (xhr, status, error) {},
+      error: function (xhr, status, error) { },
     });
   });
 }
@@ -155,7 +155,7 @@ document.addEventListener("click", function (e) {
       }
       table.replaceChild(clone_tbody, org_tbody);
     }
-  } catch (error) {}
+  } catch (error) { }
 });
 
 const input = document.querySelector("input");
@@ -209,19 +209,28 @@ function updateRadarChart(avg_league_stat_def, avg_league_stat_fwd) {
         let valueAvgOff = document.getElementById(i + "_off").innerHTML;
 
         //verify if is a defensman of not to make the diff between is stats and the general stats of the league at is position
+        //i==0|| i==23 || i==25 || i==26 || i==41 is SalaryAverage , Pim, ShotsBlock, OwnShotsBlock and GiveAway so we dont want do be red when its negative
         if (chart_playerSelStat.PosD == "True") {
           newValueTd =
             "(" + Math.round(valueOfPlayerSelectOV - valueAvgDef) + ")";
-          if((valueOfPlayerSelectOV - valueAvgDef)<0){document.getElementById(i + "_diff").style.color = "red";}
-          else{document.getElementById(i + "_diff").style.color = "green";}
+          if ((valueOfPlayerSelectOV - valueAvgDef) < -0.5) {
+            (i == 0 || i == 23 || i == 25 || i == 26 || i == 41) ? document.getElementById(i + "_diff").style.color = "green" : document.getElementById(i + "_diff").style.color = "red";
+          }
+          else {
+            (i == 0 || i == 23 || i == 25 || i == 26 || i == 41) ? document.getElementById(i + "_diff").style.color = "red" : document.getElementById(i + "_diff").style.color = "green";
+          }
         } else {
           newValueTd =
             "(" + Math.round(valueOfPlayerSelectOV - valueAvgOff) + ")";
-          if((valueOfPlayerSelectOV - valueAvgOff)<0){document.getElementById(i + "_diff").style.color = "red";}
-          else{document.getElementById(i + "_diff").style.color = "green";}
+          if ((valueOfPlayerSelectOV - valueAvgOff) < -0.5) {
+            (i == 0 || i == 23 || i == 25 || i == 26 || i == 41) ? document.getElementById(i + "_diff").style.color = "green" : document.getElementById(i + "_diff").style.color = "red";
+          }
+          else {
+            (i == 0 || i == 23 || i == 25 || i == 26 || i == 41) ? document.getElementById(i + "_diff").style.color = "red" : document.getElementById(i + "_diff").style.color = "green";
+          }
         }
-        document.getElementById(i).innerHTML = valueOfPlayerSelectOV;
 
+        document.getElementById(i).innerHTML = valueOfPlayerSelectOV;
         document.getElementById(i + "_diff").innerHTML = newValueTd;
         document.getElementById(i + "_team").innerHTML = Math.round(valueOfPlayersTeamSelectOV);
       }

@@ -17,142 +17,136 @@
 </head>
 
 <body>
+    <!-- drop down player select -->
+    <div class="table-wrap">
+
+        <head>All player name</head>
+        <div class="menu">
+            <input placeholder="Enter player name here" name="name" list="playerSelected" />
+            <datalist id="playerSelected">
+                {% for index, row in league_data.iterrows() %}
+                <option value="{{ row['Name'] }}">
+                    {{ row['Name'] }}
+                </option>
+                {% endfor %}
+            </datalist>
+        </div>
+    </div>
     <p id="PlayerName"></p>
-    <table>
-        <!-- drop down player select -->
-        <div class="table-wrap">
-
-            <head>All player name</head>
-            <div class="menu">
-                <input placeholder="Enter some text" name="name" list="playerSelected" />
-                <datalist id="playerSelected">
-                    {% for index, row in league_data.iterrows() %}
-                    <option value="{{ row['Name'] }}">
-                        {{ row['Name'] }}
-                    </option>
+    <!-- stats gen off/def, repopulate tds when playerSelcted change -->
+    <div class="table-wrap" style="overflow-x: scroll;">
+        <p>Statistiques (parties jouées min en comparaison : {{label_min_played_game}})</p>
+        <table border="1" class="sortable">
+            <thead>
+                <tr>
+                    {% for index in average_Fwd.index %}
+                    <th>
+                        {{ index }}
+                    </th>
                     {% endfor %}
-                </datalist>
-            </div>
-        </div>
-
-        <!-- stats gen off/def, repopulate tds when playerSelcted change -->
-        <div class="table-wrap">
-
-            <head>Statistiques</head>
-            <table border="1" class="sortable">
-                <thead>
-                    <tr>
-                        {% for index in average_Fwd.index %}
-                        <th>
-                            {{ index }}
-                        </th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        {% for row in average_Fwd %}
-                        <td id="{{loop.index - 1}}">{{ row }}</td>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        {% for row in average_Fwd %}
-                        <td id="{{loop.index - 1}}_diff"></td>
-                        {% endfor %}
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-
-        <!-- dont display general stat of both defense and offensive player -->
-        <div class="table-wrap" style="display: none;">
-
-            <head>Attaquants</head>
-            <table border="1" class="sortable">
-                <thead>
-                    <tr>
-                        {% for index in average_Fwd.index %}
-                        <th>
-                            {{ index }}
-                        </th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
                     {% for row in average_Fwd %}
-                    <td id="{{loop.index - 1}}_off">{{ row }}</td>
+                    <td id="{{loop.index - 1}}">{{ row }}</td>
                     {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <!-- dont display general stat of both defense and offensive player -->
-
-        <div class="table-wrap" style="display: none;">
-
-            <head>Defenseurs</head>
-            <table border="1" class="sortable">
-                <thead>
-                    <tr>
-                        {% for index in average_Def.index %}
-                        <th>
-                            {{ index }}
-                        </th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in average_Def %}
-                    <td id="{{loop.index - 1}}_def">{{ row }}</td>
+                </tr>
+                <tr>
+                    {% for row in average_Fwd %}
+                    <td id="{{loop.index - 1}}_diff"></td>
                     {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
 
-        <!-- stats gen team -->
-        <div class="table-wrap">
+    <!-- dont display general stat of both defense and offensive player -->
+    <div class="table-wrap" style="display: none;">
 
-            <p id="TeamName">Equipe</p>
-            <table border="1" class="sortable">
-                <thead>
-                    <tr>
-                        {% for index in average_Fwd.index %}
-                        <th>
-                            {{ index }}
-                        </th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        {% for row in average_Fwd %}
-                        <td id="{{loop.index - 1}}_team">{{ row }}</td>
-                        {% endfor %}
-                    </tr>
-                    <!-- <tr>
+        <head>Attaquants</head>
+        <table border="1" class="sortable">
+            <thead>
+                <tr>
+                    {% for index in average_Fwd.index %}
+                    <th>
+                        {{ index }}
+                    </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in average_Fwd %}
+                <td id="{{loop.index - 1}}_off">{{ row }}</td>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- dont display general stat of both defense and offensive player -->
+
+    <div class="table-wrap" style="display: none;">
+
+        <head>Defenseurs</head>
+        <table border="1" class="sortable">
+            <thead>
+                <tr>
+                    {% for index in average_Def.index %}
+                    <th>
+                        {{ index }}
+                    </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in average_Def %}
+                <td id="{{loop.index - 1}}_def">{{ row }}</td>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- stats gen team -->
+    <div class="table-wrap" style="overflow-x: scroll;">
+        <p id="TeamName">Equipe</p>
+        <table border="1" class="sortable">
+            <thead>
+                <tr>
+                    {% for index in average_Fwd.index %}
+                    <th>
+                        {{ index }}
+                    </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for row in average_Fwd %}
+                    <td id="{{loop.index - 1}}_team">{{ row }}</td>
+                    {% endfor %}
+                </tr>
+                <!-- <tr>
                         {% for row in average_Fwd %}
                         <td id="{{loop.index - 1}}_diff"></td>
                         {% endfor %}
                     </tr> -->
-                </tbody>
-            </table>
-        </div>
-        <!-- player graph stats -->
-        <div class="radar_div">
-            <canvas id="radarChart"></canvas>
-        </div>
-    </table>
-    < <!-- general player stats -->
-        <script src="{{ url_for('static', filename='script.js') }}"></script>
-        <script>
-            var avgdef = {{ avg_league_stat_def | safe }};
-            var avgatt = {{ avg_league_stat_fwd | safe }};
+            </tbody>
+        </table>
+    </div>
+    <!-- player graph stats -->
+    <div class="radar_div">
+        <canvas id="radarChart"></canvas>
+    </div>
+    <!-- general player stats -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        var avgdef = {{ avg_league_stat_def | safe }};
+        var avgatt = {{ avg_league_stat_fwd | safe }};
+        updateRadarChart(avgdef, avgatt);
+        function synchRadarChart() {
             updateRadarChart(avgdef, avgatt);
-            function synchRadarChart() {
-                updateRadarChart(avgdef, avgatt);
-            }
-        </script>
+        }
+    </script>
 </body>
 
 </html>
