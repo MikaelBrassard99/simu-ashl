@@ -39,7 +39,10 @@ def allStats():
     conn.close() 
     return render_template("allStats.html", league_data=df_gen, average_Def=generateOVStats(df_Def), average_Fwd=generateOVStats(df_Fwd), avg_league_stat_fwd=generateStats(df_Fwd, generalStatsColumns)[1], avg_league_stat_def=generateStats(df_Def, generalStatsColumns)[1], label_min_played_game = config_bd["MinimumGamePlayed"])
         # Handle other request methods
-        
+@app.route("/graphChart")
+def graphChart():
+    return render_template("billy_beane.html")
+        # Handle other request methods       
 @app.route("/updateChart", methods=['GET', 'POST'])
 def updateChart():
    

@@ -105,5 +105,5 @@ plot_def.yaxis.axis_label = 'Somme des statistiques selectionnées'
 
 plot_def.circle(x='SalaryCap', y='St_Mik_def',line_color=color_def, size=5, source=source_def)
 plot_def.add_layout(color_bar_def, 'right')
-output_file(filename="billy_beane.html", title="ASHL DATA FILE")
+output_file(filename="/home/mb/simu-ashl/template/billy_beane.html", title="ASHL DATA FILE")
 show(column(checkbox_button_group,plot,checkbox_button_group_def,plot_def))
