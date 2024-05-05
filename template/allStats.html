@@ -134,8 +134,173 @@
         </table>
     </div>
     <!-- player graph stats -->
-    <div class="radar_div">
-        <canvas id="radarChart"></canvas>
+    <div class='container'>
+        <div class='child'>
+            <canvas id="radarChart"></canvas>
+        </div>
+        <div class="child">
+            <div draggable="true" class="box">A</div>
+            <div draggable="true" class="box">B</div>
+            <div draggable="true" class="box">C</div>
+        </div>
+        <div class='child'>
+            <table>
+                <tr>
+                    <td>
+                        <table>
+                            <th>Attaquants</th>
+                            <tr>
+                                <td colspan="3">Ligne 1</td>
+                            </tr>
+                            <tr>
+                                <td>LW</td>
+                                <td>C</td>
+                                <td>RW</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Ligne 2</td>
+                            </tr>
+                            <tr>
+                                <td>LW</td>
+                                <td>C</td>
+                                <td>RW</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Ligne 3</td>
+                            </tr>
+                            <tr>
+                                <td>LW</td>
+                                <td>C</td>
+                                <td>RW</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Ligne 4</td>
+                            </tr>
+                            <tr>
+                                <td>LW</td>
+                                <td>C</td>
+                                <td>RW</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                            <th>Defenseurs</th>
+                            <tr>
+                                <td colspan="2">Paire 1</td>
+                            </tr>
+                            <tr>
+                                <td>DG</td>
+                                <td>DD</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">Paire 2</td>
+                            </tr>
+                            <tr>
+                                <td>DG</td>
+                                <td>DD</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">Paire 3</td>
+                            </tr>
+                            <tr>
+                                <td>DG</td>
+                                <td>DD</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                            <th>Gardiens</th>
+                            <tr>
+                                <td>
+                                    #1
+                                </td>
+                                <td>
+                                    #2
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
     <!-- general player stats -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
