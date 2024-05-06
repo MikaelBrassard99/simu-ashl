@@ -75,6 +75,7 @@ function getSelectedValue(e) {
       contentType: "application/json",
       data: JSON.stringify(value),
       success: function (response) {
+        //create a drag and drop div of the player selected
         div.innerHTML = value;
         div.draggable = "true";
         div.className = "box";

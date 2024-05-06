@@ -107,6 +107,7 @@
     background-color: #ddd;
     border-radius: .5em;
     padding: 10px;
+    width: 100px;
     cursor: move;
   }
   .child {
@@ -114,5 +115,23 @@
     border: 1px solid red;
     padding: 1rem 1rem;
     vertical-align: middle;
+  }
+
+  #table_line {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  /* #table_line tr:nth-child(even){background-color: #f2f2f2;} */
+  
+  /* #table_line tr:hover {background-color: #ddd;} */
+  
+  #table_line th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
   }
   
