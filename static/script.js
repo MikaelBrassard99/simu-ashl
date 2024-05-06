@@ -61,15 +61,38 @@ let playerChart = new Chart("radarChart", {
 });
 
 //get selected value from playerName scoll
-function getSelectedValue(selectedValue) {
+const input = document.querySelector("input");
+
+input.addEventListener("change", getSelectedValue);
+
+function getSelectedValue(e) {
   $(document).ready(function () {
-    let value = selectedValue;
+    var div = document.createElement("div");
+    let value = e.target.value;
     $.ajax({
       url: "/updateChart",
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify(value),
       success: function (response) {
+        div.innerHTML = value;
+        div.draggable = "true";
+        div.className = "box";
+        div.id = value.replace(/\s/g, '')
+        div.addEventListener('dragstart', handleDragStart);
+        div.addEventListener('dragover', handleDragOver);
+        div.addEventListener('dragenter', handleDragEnter);
+        div.addEventListener('dragleave', handleDragLeave);
+        div.addEventListener('dragend', handleDragEnd);
+        div.addEventListener('drop', handleDrop);
+        //verify if already an element at this id. if not, create one, if true dont do anything
+        try {
+          var node = document.getElementById(value.replace(/\s/g, '')).firstChild;  // Get the first child node of the first list
+        }
+        catch {
+          document.getElementById("playerSel").appendChild(div);
+        }
+
         $("#result").text("Processed value: " + value);
         synchRadarChart();
       },
@@ -97,6 +120,7 @@ function modifyVariable() {
 
 //table sort
 document.addEventListener("click", function (e) {
+  console.log(e);
   try {
     function findElementRecursive(element, tag) {
       return element.nodeName === tag
@@ -157,15 +181,6 @@ document.addEventListener("click", function (e) {
     }
   } catch (error) { }
 });
-
-const input = document.querySelector("input");
-
-input.addEventListener("change", updateValue);
-
-function updateValue(e) {
-  console.log(e.target.value);
-  getSelectedValue(e.target.value);
-}
 
 //RadarChart call from allStats script tag
 let chart_playerSelStat = [];
@@ -247,53 +262,49 @@ function updateRadarChart(avg_league_stat_def, avg_league_stat_fwd) {
 }
 
 //dragable functions
+function handleDragStart(e) {
+  this.style.opacity = '0.4';
 
+  dragSrcEl = this;
+
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/html', this.innerHTML);
+}
+
+function handleDrop(e) {
+  e.stopPropagation();
+
+  if (dragSrcEl !== this) {
+    dragSrcEl.innerHTML = this.innerHTML;
+    this.innerHTML = e.dataTransfer.getData('text/html');
+  }
+
+  return false;
+}
+
+function handleDragEnd(e) {
+  this.style.opacity = '1';
+
+  items.forEach(function (item) {
+    item.classList.remove('over');
+  });
+}
+
+function handleDragOver(e) {
+  e.preventDefault();
+  return false;
+}
+
+function handleDragEnter(e) {
+  this.classList.add('over');
+}
+
+function handleDragLeave(e) {
+  this.classList.remove('over');
+}
 document.addEventListener('DOMContentLoaded', (event) => {
-
-  function handleDragStart(e) {
-    this.style.opacity = '0.4';
-  
-    dragSrcEl = this;
-  
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/html', this.innerHTML);
-  }
-  
-  function handleDrop(e) {
-    e.stopPropagation();
-  
-    if (dragSrcEl !== this) {
-      dragSrcEl.innerHTML = this.innerHTML;
-      this.innerHTML = e.dataTransfer.getData('text/html');
-    }
-  
-    return false;
-  }
-    
-
-  function handleDragEnd(e) {
-    this.style.opacity = '1';
-
-    items.forEach(function (item) {
-      item.classList.remove('over');
-    });
-  }
-
-  function handleDragOver(e) {
-    e.preventDefault();
-    return false;
-  }
-
-  function handleDragEnter(e) {
-    this.classList.add('over');
-  }
-
-  function handleDragLeave(e) {
-    this.classList.remove('over');
-  }
-
   let items = document.querySelectorAll('.container .box');
-  items.forEach(function(item) {
+  items.forEach(function (item) {
     item.addEventListener('dragstart', handleDragStart);
     item.addEventListener('dragover', handleDragOver);
     item.addEventListener('dragenter', handleDragEnter);
