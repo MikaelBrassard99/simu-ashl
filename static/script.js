@@ -262,13 +262,12 @@ function updateRadarChart(avg_league_stat_def, avg_league_stat_fwd) {
   });
 }
 
-//getvaluesOfSelectedPlayer
+//getvaluesOfSelectedPlayer from event
 let playerSelStat = [];
 let playerSelStatFiltered = [];
 let avgStat = [];
 let labels = [];
-function getValueFromPlayer(e) {
-  console.log(this);
+function event_getValuePlayer(e) {
   if (this.innerHTML != '') {
     var url = '/getStatFromPlayerName';
     var data = { playerName: this.innerHTML };
@@ -293,9 +292,10 @@ function getValueFromPlayer(e) {
   }
 }
 
-/*function getValueFromPlayer(playerName) {
+//getvaluesOfSelectedPlayer from demand
+function getValueFromPlayer(playerName) {
   var url = '/getStatFromPlayerName';
-  var data = { playerName: playerName };
+  var data = { playerName: playerName};
   $.get(url, data, function (response) {
     if (response !== null && typeof response !== "undefined") {
       //all PlayerStat
@@ -304,9 +304,8 @@ function getValueFromPlayer(e) {
       labels = response.labels;
 
       //get name from player
-      playerStatName = playerSelStat.Name;
-      //get team name from player
-      playerTeamName = playerSelStat.TeamName;
+      playerStatName = playerSelStat.playerSelSorted;
+
 
       for (let i = 0; i < labels.length; i++) {
         playerSelStatFiltered[i] = playerSelStat[labels[i]];
@@ -314,7 +313,7 @@ function getValueFromPlayer(e) {
     }
   });
   return playerSelStatFiltered;
-}*/
+}
 
 //dragable functions
 function handleDragStart(e) {
@@ -326,6 +325,13 @@ function handleDragStart(e) {
   e.dataTransfer.setData('text/html', this.innerHTML);
 }
 
+var playerLW;
+var playerC;
+var playerRW;
+var playerDG;
+var playerDD;
+var lineStatGrid = [];
+
 function handleDrop(e) {
   e.stopPropagation();
 
@@ -335,13 +341,66 @@ function handleDrop(e) {
   }
 
   //Populate all stats from line
+  lineStatGrid[0] = document.getElementById("LW_Line_1");
+  lineStatGrid[1] = document.getElementById("LW_Line_2");
+  lineStatGrid[2] = document.getElementById("LW_Line_3");
+  lineStatGrid[3] = document.getElementById("LW_Line_4");
 
+  lineStatGrid[4] = document.getElementById("C_Line_1");
+  lineStatGrid[5] = document.getElementById("C_Line_2");
+  lineStatGrid[6] = document.getElementById("C_Line_3");
+  lineStatGrid[7] = document.getElementById("C_Line_4");
+
+  lineStatGrid[8] = document.getElementById("RW_Line_1");
+  lineStatGrid[9] = document.getElementById("RW_Line_2");
+  lineStatGrid[10] = document.getElementById("RW_Line_3");
+  lineStatGrid[11] = document.getElementById("RW_Line_4");
+
+  lineStatGrid[12] = document.getElementById("DG_Line_1");
+  lineStatGrid[13] = document.getElementById("DD_Line_1");
+  
+  lineStatGrid[14] = document.getElementById("DG_Line_2");
+  lineStatGrid[15] = document.getElementById("DD_Line_2");
+  
+  lineStatGrid[16] = document.getElementById("DG_Line_3");
+  lineStatGrid[17] = document.getElementById("DD_Line_3");
+
+
+  //verify if line 1 is full and populate grid stats
+  if (lineStatGrid[0].innerHTML != '' && lineStatGrid[4].innerHTML != '' && lineStatGrid[8].innerHTML != ''){
+    console.log('line 1 full', lineStatGrid[0].innerHTML,lineStatGrid[4].innerHTML,lineStatGrid[8].innerHTML);
+    playerLW = getValueFromPlayer(lineStatGrid[0].innerHTML);
+    playerC = getValueFromPlayer(lineStatGrid[4].innerHTML);
+    playerRW = getValueFromPlayer(lineStatGrid[8].innerHTML);
+    console.log(playerLW,playerC,playerRW);
+  }
+  //verify if line 2 is full and populate grid stats
+  if (lineStatGrid[1].innerHTML != '' && lineStatGrid[5].innerHTML != '' && lineStatGrid[9].innerHTML != ''){
+    console.log('line 2 full');
+    playerLW = getValueFromPlayer(lineStatGrid[1].innerHTML);
+    playerC = getValueFromPlayer(lineStatGrid[5].innerHTML);
+    playerRW = getValueFromPlayer(lineStatGrid[9].innerHTML);
+  }
+  //verify if line 3 is full and populate grid stats
+  if (lineStatGrid[2].innerHTML != '' && lineStatGrid[6].innerHTML != '' && lineStatGrid[10].innerHTML != ''){
+    console.log('line 3 full');
+    playerLW = getValueFromPlayer(lineStatGrid[2].innerHTML);
+    playerC = getValueFromPlayer(lineStatGrid[6].innerHTML);
+    playerRW = getValueFromPlayer(lineStatGrid[10].innerHTML);
+  }
+  //verify if line 4 is full and populate grid stats
+  if (lineStatGrid[3].innerHTML != '' && lineStatGrid[7].innerHTML != '' && lineStatGrid[11].innerHTML != ''){
+    console.log('line 4 full');
+    playerLW = getValueFromPlayer(lineStatGrid[3].innerHTML);
+    playerC = getValueFromPlayer(lineStatGrid[7].innerHTML);
+    playerRW = getValueFromPlayer(lineStatGrid[11].innerHTML);
+  }
   return false;
 }
 
 function handleDragEnd(e) {
   this.style.opacity = '1';
-
+  let items = document.querySelectorAll('.container .box');
   items.forEach(function (item) {
     item.classList.remove('over');
   });
@@ -368,6 +427,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     item.addEventListener('dragleave', handleDragLeave);
     item.addEventListener('dragend', handleDragEnd);
     item.addEventListener('drop', handleDrop);
-    item.addEventListener('mouseover', getValueFromPlayer)
+    item.addEventListener('mouseover', event_getValuePlayer)
   });
 });

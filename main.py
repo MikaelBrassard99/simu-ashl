@@ -69,17 +69,14 @@ def updateChart():
     response_data = {'values':df_PlayerSel.to_json(orient='records'), 'labels': generalStatsColumns, 'playerSelSorted': generateOVStats(df_PlayerSel).to_json(orient='records'), 'playersFromTeamSel' : generateOVStats(df_AllPlayerFromTeamId).to_json(orient='records')} 
     return jsonify(response_data)
 
+#get one player on mouse over
 @app.route("/getStatFromPlayerName", methods=['GET', 'POST'])
 def getStat():
    
     playerName = request.args.get('playerName')
     conn = sqlite3.connect('ASHL13-STHS.db')
 
-    if data:
-        querySelectedPlayer = f'SELECT PlayerProSeasonStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PlayerProSeasonStat.GP, PlayerProSeasonStat.Shots, PlayerProSeasonStat.G, PlayerProSeasonStat.A, PlayerProSeasonStat.P, PlayerProSeasonStat.PlusMinus, PlayerProSeasonStat.Pim, PlayerProSeasonStat.ShotsBlock, PlayerProSeasonStat.OwnShotsBlock, PlayerProSeasonStat.OwnShotsMissGoal, PlayerProSeasonStat.Hits, PlayerProSeasonStat.HitsTook, PlayerProSeasonStat.GW, PlayerProSeasonStat.GT, PlayerProSeasonStat.FaceOffWon, PlayerProSeasonStat.FaceOffTotal, PlayerProSeasonStat.PPG, PlayerProSeasonStat.PPA, PlayerProSeasonStat.PPP, PlayerProSeasonStat.PPShots, PlayerProSeasonStat.PKG, PlayerProSeasonStat.PKA, PlayerProSeasonStat.PKP, PlayerProSeasonStat.PKShots, PlayerProSeasonStat.GiveAway, PlayerProSeasonStat.TakeAway, PlayerProSeasonStat.PuckPossesionTime  FROM PlayerProSeasonStat LEFT JOIN PlayerInfo ON PlayerProSeasonStat.Number = PlayerInfo.Number where PlayerInfo.Name = "{playerName}"'  
-
-    else:
-        querySelectedPlayer = 'SELECT PlayerProSeasonStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PlayerProSeasonStat.GP, PlayerProSeasonStat.Shots, PlayerProSeasonStat.G, PlayerProSeasonStat.A, PlayerProSeasonStat.P, PlayerProSeasonStat.PlusMinus, PlayerProSeasonStat.Pim, PlayerProSeasonStat.ShotsBlock, PlayerProSeasonStat.OwnShotsBlock, PlayerProSeasonStat.OwnShotsMissGoal, PlayerProSeasonStat.Hits, PlayerProSeasonStat.HitsTook, PlayerProSeasonStat.GW, PlayerProSeasonStat.GT, PlayerProSeasonStat.FaceOffWon, PlayerProSeasonStat.FaceOffTotal, PlayerProSeasonStat.PPG, PlayerProSeasonStat.PPA, PlayerProSeasonStat.PPP, PlayerProSeasonStat.PPShots, PlayerProSeasonStat.PKG, PlayerProSeasonStat.PKA, PlayerProSeasonStat.PKP, PlayerProSeasonStat.PKShots, PlayerProSeasonStat.GiveAway, PlayerProSeasonStat.TakeAway, PlayerProSeasonStat.PuckPossesionTime  FROM PlayerProSeasonStat LEFT JOIN PlayerInfo ON PlayerProSeasonStat.Number = PlayerInfo.Number where PlayerInfo.Name = "Max Jones"' 
+    querySelectedPlayer = f'SELECT PlayerProSeasonStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PlayerProSeasonStat.GP, PlayerProSeasonStat.Shots, PlayerProSeasonStat.G, PlayerProSeasonStat.A, PlayerProSeasonStat.P, PlayerProSeasonStat.PlusMinus, PlayerProSeasonStat.Pim, PlayerProSeasonStat.ShotsBlock, PlayerProSeasonStat.OwnShotsBlock, PlayerProSeasonStat.OwnShotsMissGoal, PlayerProSeasonStat.Hits, PlayerProSeasonStat.HitsTook, PlayerProSeasonStat.GW, PlayerProSeasonStat.GT, PlayerProSeasonStat.FaceOffWon, PlayerProSeasonStat.FaceOffTotal, PlayerProSeasonStat.PPG, PlayerProSeasonStat.PPA, PlayerProSeasonStat.PPP, PlayerProSeasonStat.PPShots, PlayerProSeasonStat.PKG, PlayerProSeasonStat.PKA, PlayerProSeasonStat.PKP, PlayerProSeasonStat.PKShots, PlayerProSeasonStat.GiveAway, PlayerProSeasonStat.TakeAway, PlayerProSeasonStat.PuckPossesionTime  FROM PlayerProSeasonStat LEFT JOIN PlayerInfo ON PlayerProSeasonStat.Number = PlayerInfo.Number where PlayerInfo.Name = "{playerName}"'  
 
     df_PlayerSel = pd.read_sql(querySelectedPlayer, conn)
     
@@ -90,7 +87,8 @@ def getStat():
     conn.close() 
     #show all player of the team where the player is at
     response_data = {'values':df_PlayerSel.to_json(orient='records'), 'labels': generalStatsColumns, 'playerSelSorted': generateOVStats(df_PlayerSel).to_json(orient='records'), 'playersFromTeamSel' : generateOVStats(df_AllPlayerFromTeamId).to_json(orient='records')} 
-    return jsonify(response_data)     
+    return jsonify(response_data)  
+   
         
 @app.route("/openStats")
 def openStats():
