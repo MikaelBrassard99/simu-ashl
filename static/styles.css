@@ -110,6 +110,16 @@
     width: 100px;
     cursor: move;
   }
+
+  .box2 {
+    border: 3px solid #666;
+    background-color: #ddd;
+    border-radius: .5em;
+    padding: 10px;
+    width: 100px;
+    cursor: move;
+  }
+
   .child {
     display: inline-block;
     border: 1px solid red;
@@ -121,6 +131,7 @@
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
+    height: fit-content;
   }
   
   /* #table_line tr:nth-child(even){background-color: #f2f2f2;} */
@@ -131,7 +142,7 @@
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
-    background-color: #04AA6D;
+    background-color: #c4c4c4;
     color: white;
   }
   

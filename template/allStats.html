@@ -144,18 +144,18 @@
         </div>
         <!-- Lines Div -->
         <div class='child'>
-            <table id="table_line">
-                <tr>
-                    <td>
-                        <table>
+            <table>
+                <th>
+                    <tr>
+                        <table id="table_line">
                             <th>Attaquants</th>
                             <tr>
                                 <td colspan="3">Ligne 1</td>
                             </tr>
                             <tr>
-                                <td>LW</td>
-                                <td>C</td>
-                                <td>RW</td>
+                                <th scope="col">LW</th>
+                                <th scope="col">C</th>
+                                <th scope="col">RW</th>
                             </tr>
                             <tr>
                                 <td>
@@ -172,9 +172,9 @@
                                 <td colspan="3">Ligne 2</td>
                             </tr>
                             <tr>
-                                <td>LW</td>
-                                <td>C</td>
-                                <td>RW</td>
+                                <th scope="col">LW</th>
+                                <th scope="col">C</th>
+                                <th scope="col">RW</th>
                             </tr>
                             <tr>
                                 <td>
@@ -191,9 +191,9 @@
                                 <td colspan="3">Ligne 3</td>
                             </tr>
                             <tr>
-                                <td>LW</td>
-                                <td>C</td>
-                                <td>RW</td>
+                                <th scope="col">LW</th>
+                                <th scope="col">C</th>
+                                <th scope="col">RW</th>
                             </tr>
                             <tr>
                                 <td>
@@ -210,9 +210,9 @@
                                 <td colspan="3">Ligne 4</td>
                             </tr>
                             <tr>
-                                <td>LW</td>
-                                <td>C</td>
-                                <td>RW</td>
+                                <th scope="col">LW</th>
+                                <th scope="col">C</th>
+                                <th scope="col">RW</th>
                             </tr>
                             <tr>
                                 <td>
@@ -226,16 +226,14 @@
                                 </td>
                             </tr>
                         </table>
-                    </td>
-                    <td>
-                        <table>
+                        <table id="table_line">
                             <th>Defenseurs</th>
                             <tr>
                                 <td colspan="2">Paire 1</td>
                             </tr>
                             <tr>
-                                <td>DG</td>
-                                <td>DD</td>
+                                <th scope="col">DG</th>
+                                <th scope="col">DD</th>
                             </tr>
                             <tr>
                                 <td>
@@ -249,8 +247,8 @@
                                 <td colspan="2">Paire 2</td>
                             </tr>
                             <tr>
-                                <td>DG</td>
-                                <td>DD</td>
+                                <th scope="col">DG</th>
+                                <th scope="col">DD</th>
                             </tr>
                             <tr>
                                 <td>
@@ -264,8 +262,8 @@
                                 <td colspan="2">Paire 3</td>
                             </tr>
                             <tr>
-                                <td>DG</td>
-                                <td>DD</td>
+                                <th scope="col">DG</th>
+                                <th scope="col">DD</th>
                             </tr>
                             <tr>
                                 <td>
@@ -276,17 +274,16 @@
                                 </td>
                             </tr>
                         </table>
-                    </td>
-                    <td>
-                        <table>
+
+                        <table id="table_line">
                             <th>Gardiens</th>
                             <tr>
-                                <td>
+                                <th scope="col">
                                     #1
-                                </td>
-                                <td>
+                                </th>
+                                <th scope="col">
                                     #2
-                                </td>
+                                </th>
                             </tr>
                             <tr>
                                 <td>
@@ -297,8 +294,166 @@
                                 </td>
                             </tr>
                         </table>
-                    </td>
-                </tr>
+                    </tr>
+                </th>
+
+            </table>
+        </div>
+        <!-- Stats by line Div -->
+        <div class='child'>
+            <table>
+                <th>
+                    <tr>
+                        <table id="table_line">
+                            <th>Attaquants</th>
+                            <tr>
+                                <td colspan="3">Ligne 1</td>
+                            </tr>
+                            <tr>
+                                <th scope="col">LW</th>
+                                <th scope="col">C</th>
+                                <th scope="col">RW</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div id="LW_Line_1" draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div id="C_Line_1" draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div id="RW_Line_1" draggable="true" class="box"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Ligne 2</td>
+                            </tr>
+                            <tr>
+                                <th scope="col">LW</th>
+                                <th scope="col">C</th>
+                                <th scope="col">RW</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div id="LW_Line_2" draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div id="C_Line_2" draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div id="RW_Line_2" draggable="true" class="box"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Ligne 3</td>
+                            </tr>
+                            <tr>
+                                <th scope="col">LW</th>
+                                <th scope="col">C</th>
+                                <th scope="col">RW</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div id="LW_Line_3" draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div id="C_Line_3" draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div id="RW_Line_3" draggable="true" class="box"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Ligne 4</td>
+                            </tr>
+                            <tr>
+                                <th scope="col">LW</th>
+                                <th scope="col">C</th>
+                                <th scope="col">RW</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div id="LW_Line_4" draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div id="C_Line_4" draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div id="RW_Line_4" draggable="true" class="box"></div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table id="table_line">
+                            <th>Defenseurs</th>
+                            <tr>
+                                <td colspan="2">Paire 1</td>
+                            </tr>
+                            <tr>
+                                <th scope="col">DG</th>
+                                <th scope="col">DD</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div id="DG_Line_1" draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div id="DD_Line_1" draggable="true" class="box"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">Paire 2</td>
+                            </tr>
+                            <tr>
+                                <th scope="col">DG</th>
+                                <th scope="col">DD</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div id="DG_Line_2" draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div id="DD_Line_2" draggable="true" class="box"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">Paire 3</td>
+                            </tr>
+                            <tr>
+                                <th scope="col">DG</th>
+                                <th scope="col">DD</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div id="DG_Line_3" draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div id="DD_Line_3" draggable="true" class="box"></div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table id="table_line">
+                            <th>Gardiens</th>
+                            <tr>
+                                <th scope="col">
+                                    #1
+                                </th>
+                                <th scope="col">
+                                    #2
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                                <td>
+                                    <div draggable="true" class="box"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </tr>
+                </th>
+
             </table>
         </div>
     </div>

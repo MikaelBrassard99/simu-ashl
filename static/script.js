@@ -78,7 +78,7 @@ function getSelectedValue(e) {
         //create a drag and drop div of the player selected
         div.innerHTML = value;
         div.draggable = "true";
-        div.className = "box";
+        div.className = "box2";
         div.id = value.replace(/\s/g, '')
         div.addEventListener('dragstart', handleDragStart);
         div.addEventListener('dragover', handleDragOver);
@@ -86,6 +86,7 @@ function getSelectedValue(e) {
         div.addEventListener('dragleave', handleDragLeave);
         div.addEventListener('dragend', handleDragEnd);
         div.addEventListener('drop', handleDrop);
+        //div.addEventListener('mouseover', getValueFromPlayer)
         //verify if already an element at this id. if not, create one, if true dont do anything
         try {
           var node = document.getElementById(value.replace(/\s/g, '')).firstChild;  // Get the first child node of the first list
@@ -190,7 +191,6 @@ let chart_avgStat = [];
 let chart_labels = [];
 let newValueTd = "";
 let valueOfPlayerOV = [];
-// Define a JavaScript function inside a <script> tag
 function updateRadarChart(avg_league_stat_def, avg_league_stat_fwd) {
   $.get("/updateChart", function (response) {
     // Process the received JSON data
@@ -262,6 +262,60 @@ function updateRadarChart(avg_league_stat_def, avg_league_stat_fwd) {
   });
 }
 
+//getvaluesOfSelectedPlayer
+let playerSelStat = [];
+let playerSelStatFiltered = [];
+let avgStat = [];
+let labels = [];
+function getValueFromPlayer(e) {
+  console.log(this);
+  if (this.innerHTML != '') {
+    var url = '/getStatFromPlayerName';
+    var data = { playerName: this.innerHTML };
+    $.get(url, data, function (response) {
+      if (response !== null && typeof response !== "undefined") {
+        //all PlayerStat
+        playerSelStat = JSON.parse(response.values)[0];
+        //get column to show in chart
+        labels = response.labels;
+
+        //get name from player
+        playerStatName = playerSelStat.Name;
+        //get team name from player
+        playerTeamName = playerSelStat.TeamName;
+
+        for (let i = 0; i < labels.length; i++) {
+          playerSelStatFiltered[i] = playerSelStat[labels[i]];
+        }
+        console.log(playerStatName, playerTeamName, playerSelStatFiltered);
+      }
+    });
+  }
+}
+
+/*function getValueFromPlayer(playerName) {
+  var url = '/getStatFromPlayerName';
+  var data = { playerName: playerName };
+  $.get(url, data, function (response) {
+    if (response !== null && typeof response !== "undefined") {
+      //all PlayerStat
+      playerSelStat = JSON.parse(response.values)[0];
+      //get column to show in chart
+      labels = response.labels;
+
+      //get name from player
+      playerStatName = playerSelStat.Name;
+      //get team name from player
+      playerTeamName = playerSelStat.TeamName;
+
+      for (let i = 0; i < labels.length; i++) {
+        playerSelStatFiltered[i] = playerSelStat[labels[i]];
+      }
+    }
+  });
+  return playerSelStatFiltered;
+}*/
+
 //dragable functions
 function handleDragStart(e) {
   this.style.opacity = '0.4';
@@ -279,6 +333,8 @@ function handleDrop(e) {
     dragSrcEl.innerHTML = this.innerHTML;
     this.innerHTML = e.dataTransfer.getData('text/html');
   }
+
+  //Populate all stats from line
 
   return false;
 }
@@ -312,5 +368,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     item.addEventListener('dragleave', handleDragLeave);
     item.addEventListener('dragend', handleDragEnd);
     item.addEventListener('drop', handleDrop);
+    item.addEventListener('mouseover', getValueFromPlayer)
   });
 });
