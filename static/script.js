@@ -1,5 +1,7 @@
 let chart_playerStat = [];
 let chart_avgFwdOV = [];
+let gbl_avg_league_stat_def;
+let gbl_avg_league_stat_fwd;
 
 let playerChart = new Chart("radarChart", {
   type: "radar",
@@ -86,6 +88,7 @@ function getSelectedValue(e) {
         div.addEventListener('dragleave', handleDragLeave);
         div.addEventListener('dragend', handleDragEnd);
         div.addEventListener('drop', handleDrop);
+        div.addEventListener("dblclick", handleDblClick);
         //div.addEventListener('mouseover', getValueFromPlayer)
         //verify if already an element at this id. if not, create one, if true dont do anything
         try {
@@ -192,6 +195,8 @@ let chart_labels = [];
 let newValueTd = "";
 let valueOfPlayerOV = [];
 function updateRadarChart(avg_league_stat_def, avg_league_stat_fwd) {
+  gbl_avg_league_stat_def = avg_league_stat_def;
+  gbl_avg_league_stat_fwd = avg_league_stat_fwd;
   $.get("/updateChart", function (response) {
     // Process the received JSON data
     if (response !== null && typeof response !== "undefined") {
@@ -261,7 +266,78 @@ function updateRadarChart(avg_league_stat_def, avg_league_stat_fwd) {
     playerChart.update();
   });
 }
+function updateDataOnMouseOver(playerName, avg_league_stat_def, avg_league_stat_fwd) {
+  var url = '/updateChartMouseOver';
+  var data = { playerName: playerName };
+  $.get(url, data, function (response) {
+    // Process the received JSON data
+    if (response !== null && typeof response !== "undefined") {
+      //all PlayerStat
+      chart_playerSelStat = JSON.parse(response.values)[0];
+      //get column to show in chart
+      chart_labels = response.labels;
+      //get name from player
+      chart_playerStatName = chart_playerSelStat.Name;
+      //get team name from player
+      chart_playerTeamName = chart_playerSelStat.TeamName;
 
+      //get values from column
+      for (let i = 0; i < chart_labels.length; i++) {
+        chart_playerSelStatFiltered[i] = chart_playerSelStat[chart_labels[i]];
+      }
+      //verify if player is D
+      if (chart_playerSelStat.PosD == "True") {
+        //get average static league stat from rendertemplate
+        chart_avgStat = avg_league_stat_def;
+        chart_avgStatLabel = "Moyenne def";
+      } else {
+        chart_avgStat = avg_league_stat_fwd;
+        chart_avgStatLabel = "Moyenne att";
+      }
+
+      for (let i = 0; i < JSON.parse(response.playerSelSorted).length; i++) {
+        let valueOfPlayerSelectOV = JSON.parse(response.playerSelSorted)[i];
+        let valueOfPlayersTeamSelectOV = JSON.parse(response.playersFromTeamSel)[i];
+        let valueAvgDef = document.getElementById(i + "_def").innerHTML;
+        let valueAvgOff = document.getElementById(i + "_off").innerHTML;
+
+        //verify if is a defensman of not to make the diff between is stats and the general stats of the league at is position
+        //i==0|| i==23 || i==25 || i==26 || i==41 is SalaryAverage , Pim, ShotsBlock, OwnShotsBlock and GiveAway so we dont want do be red when its negative
+        if (chart_playerSelStat.PosD == "True") {
+          newValueTd =
+            "(" + Math.round(valueOfPlayerSelectOV - valueAvgDef) + ")";
+          if ((valueOfPlayerSelectOV - valueAvgDef) < -0.5) {
+            (i == 0 || i == 23 || i == 25 || i == 26 || i == 41) ? document.getElementById(i + "_diff").style.color = "green" : document.getElementById(i + "_diff").style.color = "red";
+          }
+          else {
+            (i == 0 || i == 23 || i == 25 || i == 26 || i == 41) ? document.getElementById(i + "_diff").style.color = "red" : document.getElementById(i + "_diff").style.color = "green";
+          }
+        } else {
+          newValueTd =
+            "(" + Math.round(valueOfPlayerSelectOV - valueAvgOff) + ")";
+          if ((valueOfPlayerSelectOV - valueAvgOff) < -0.5) {
+            (i == 0 || i == 23 || i == 25 || i == 26 || i == 41) ? document.getElementById(i + "_diff").style.color = "green" : document.getElementById(i + "_diff").style.color = "red";
+          }
+          else {
+            (i == 0 || i == 23 || i == 25 || i == 26 || i == 41) ? document.getElementById(i + "_diff").style.color = "red" : document.getElementById(i + "_diff").style.color = "green";
+          }
+        }
+
+        document.getElementById(i).innerHTML = valueOfPlayerSelectOV;
+        document.getElementById(i + "_diff").innerHTML = newValueTd;
+        document.getElementById(i + "_team").innerHTML = Math.round(valueOfPlayersTeamSelectOV);
+      }
+    }
+    document.getElementById("PlayerName").innerHTML = chart_playerStatName;
+    document.getElementById("TeamName").innerHTML = chart_playerTeamName;
+    playerChart.data.labels = chart_labels;
+    playerChart.data.datasets[0].label = chart_playerStatName;
+    playerChart.data.datasets[0].data = chart_playerSelStatFiltered;
+    playerChart.data.datasets[1].label = chart_avgStatLabel;
+    playerChart.data.datasets[1].data = chart_avgStat;
+    playerChart.update();
+  });
+}
 //getvaluesOfSelectedPlayer from event
 let playerSelStat = [];
 let playerSelStatFiltered = [];
@@ -287,34 +363,80 @@ function event_getValuePlayer(e) {
           playerSelStatFiltered[i] = playerSelStat[labels[i]];
         }
         console.log(playerStatName, playerTeamName, playerSelStatFiltered);
+        updateDataOnMouseOver(playerStatName, gbl_avg_league_stat_def, gbl_avg_league_stat_fwd);
       }
     });
   }
 }
 
 //getvaluesOfSelectedPlayer from demand
-function getValueFromPlayer(playerName) {
-  var url = '/getStatFromPlayerName';
-  var data = { playerName: playerName};
+let player1Stat = [];
+let player2Stat = [];
+let player3Stat = [];
+let player1StatFiltered = [];
+let player2StatFiltered = [];
+let player3StatFiltered = [];
+function getValueFromPlayer(playerNames, provider) {
+  var url = '/getStatFromPlayersName';
+  var data = { playerName1: playerNames[0], playerName2: playerNames[1], playerName3: playerNames[2] };
+
+
   $.get(url, data, function (response) {
     if (response !== null && typeof response !== "undefined") {
       //all PlayerStat
-      playerSelStat = JSON.parse(response.values)[0];
-      //get column to show in chart
-      labels = response.labels;
-
-      //get name from player
-      playerStatName = playerSelStat.playerSelSorted;
-
-
-      for (let i = 0; i < labels.length; i++) {
-        playerSelStatFiltered[i] = playerSelStat[labels[i]];
+      if (response.valuesP1 != '' && response.valuesP2 != '' && response.valuesP3 != '') {
+        player1Stat = JSON.parse(response.valuesP1)[0];
+        player2Stat = JSON.parse(response.valuesP2)[0];
+        player3Stat = JSON.parse(response.valuesP3)[0];
+        console.log(player1Stat, player2Stat, player3Stat)
+        labels = response.labels;
+        for (let i = 0; i < labels.length; i++) {
+          player1StatFiltered[i] = player1Stat[labels[i]];
+          player2StatFiltered[i] = player2Stat[labels[i]];
+          player3StatFiltered[i] = player3Stat[labels[i]];
+          var div = document.getElementById(`${labels[i]}_${provider}`)
+          div.innerHTML = Math.round((player1StatFiltered[i] + player2StatFiltered[i] + player3StatFiltered[i]) / 3);
+        }
       }
+      else {
+        for (let i = 0; i < labels.length; i++) {
+          var div = document.getElementById(`${labels[i]}_${provider}`)
+          div.innerHTML = '';
+        }
+      }
+      console.log(player1StatFiltered, player2StatFiltered, player3StatFiltered);
     }
   });
-  return playerSelStatFiltered;
 }
 
+function getValueFromdef(playerNames, provider) {
+  var url = '/getStatFromDefsName';
+  var data = { playerName1: playerNames[0], playerName2: playerNames[1] };
+  $.get(url, data, function (response) {
+    if (response !== null && typeof response !== "undefined") {
+      //all PlayerStat
+      if (response.valuesP1 != '' && response.valuesP2 != '' && response.valuesP3 != '') {
+        player1Stat = JSON.parse(response.valuesP1)[0];
+        player2Stat = JSON.parse(response.valuesP2)[0];
+        console.log(player1Stat, player2Stat)
+        labels = response.labels;
+        for (let i = 0; i < labels.length; i++) {
+          player1StatFiltered[i] = player1Stat[labels[i]];
+          player2StatFiltered[i] = player2Stat[labels[i]];
+          var div = document.getElementById(`${labels[i]}_${provider}`)
+          div.innerHTML = Math.round((player1StatFiltered[i] + player2StatFiltered[i]) / 2);
+        }
+      }
+      else {
+        for (let i = 0; i < labels.length; i++) {
+          var div = document.getElementById(`${labels[i]}_${provider}`)
+          div.innerHTML = '';
+        }
+      }
+      console.log(player1StatFiltered, player2StatFiltered);
+    }
+  });
+}
 //dragable functions
 function handleDragStart(e) {
   this.style.opacity = '0.4';
@@ -325,13 +447,11 @@ function handleDragStart(e) {
   e.dataTransfer.setData('text/html', this.innerHTML);
 }
 
-var playerLW;
-var playerC;
-var playerRW;
-var playerDG;
-var playerDD;
-var lineStatGrid = [];
+function handleDblClick(e) {
+  this.remove();
+}
 
+var lineStatGrid = [];
 function handleDrop(e) {
   e.stopPropagation();
 
@@ -358,42 +478,48 @@ function handleDrop(e) {
 
   lineStatGrid[12] = document.getElementById("DG_Line_1");
   lineStatGrid[13] = document.getElementById("DD_Line_1");
-  
+
   lineStatGrid[14] = document.getElementById("DG_Line_2");
   lineStatGrid[15] = document.getElementById("DD_Line_2");
-  
+
   lineStatGrid[16] = document.getElementById("DG_Line_3");
   lineStatGrid[17] = document.getElementById("DD_Line_3");
 
 
   //verify if line 1 is full and populate grid stats
-  if (lineStatGrid[0].innerHTML != '' && lineStatGrid[4].innerHTML != '' && lineStatGrid[8].innerHTML != ''){
-    console.log('line 1 full', lineStatGrid[0].innerHTML,lineStatGrid[4].innerHTML,lineStatGrid[8].innerHTML);
-    playerLW = getValueFromPlayer(lineStatGrid[0].innerHTML);
-    playerC = getValueFromPlayer(lineStatGrid[4].innerHTML);
-    playerRW = getValueFromPlayer(lineStatGrid[8].innerHTML);
-    console.log(playerLW,playerC,playerRW);
+  if (lineStatGrid[0].innerHTML != '' && lineStatGrid[4].innerHTML != '' && lineStatGrid[8].innerHTML != '') {
+    console.log('line 1 full', lineStatGrid[0].innerHTML, lineStatGrid[4].innerHTML, lineStatGrid[8].innerHTML);
+    getValueFromPlayer([lineStatGrid[0].innerHTML, lineStatGrid[4].innerHTML, lineStatGrid[8].innerHTML], "Line_1");
   }
   //verify if line 2 is full and populate grid stats
-  if (lineStatGrid[1].innerHTML != '' && lineStatGrid[5].innerHTML != '' && lineStatGrid[9].innerHTML != ''){
+  if (lineStatGrid[1].innerHTML != '' && lineStatGrid[5].innerHTML != '' && lineStatGrid[9].innerHTML != '') {
     console.log('line 2 full');
-    playerLW = getValueFromPlayer(lineStatGrid[1].innerHTML);
-    playerC = getValueFromPlayer(lineStatGrid[5].innerHTML);
-    playerRW = getValueFromPlayer(lineStatGrid[9].innerHTML);
+    getValueFromPlayer([lineStatGrid[1].innerHTML, lineStatGrid[5].innerHTML, lineStatGrid[9].innerHTML], "Line_2");
   }
   //verify if line 3 is full and populate grid stats
-  if (lineStatGrid[2].innerHTML != '' && lineStatGrid[6].innerHTML != '' && lineStatGrid[10].innerHTML != ''){
+  if (lineStatGrid[2].innerHTML != '' && lineStatGrid[6].innerHTML != '' && lineStatGrid[10].innerHTML != '') {
     console.log('line 3 full');
-    playerLW = getValueFromPlayer(lineStatGrid[2].innerHTML);
-    playerC = getValueFromPlayer(lineStatGrid[6].innerHTML);
-    playerRW = getValueFromPlayer(lineStatGrid[10].innerHTML);
+    getValueFromPlayer([lineStatGrid[2].innerHTML, lineStatGrid[6].innerHTML, lineStatGrid[10].innerHTML], "Line_3");
   }
   //verify if line 4 is full and populate grid stats
-  if (lineStatGrid[3].innerHTML != '' && lineStatGrid[7].innerHTML != '' && lineStatGrid[11].innerHTML != ''){
+  if (lineStatGrid[3].innerHTML != '' && lineStatGrid[7].innerHTML != '' && lineStatGrid[11].innerHTML != '') {
     console.log('line 4 full');
-    playerLW = getValueFromPlayer(lineStatGrid[3].innerHTML);
-    playerC = getValueFromPlayer(lineStatGrid[7].innerHTML);
-    playerRW = getValueFromPlayer(lineStatGrid[11].innerHTML);
+    getValueFromPlayer([lineStatGrid[3].innerHTML, lineStatGrid[7].innerHTML, lineStatGrid[11].innerHTML], "Line_4");
+  }
+  //verify if paire 1 is full and populate grid stats
+  if (lineStatGrid[12].innerHTML != '' && lineStatGrid[13].innerHTML != '') {
+    console.log('paire 1 full');
+    getValueFromdef([lineStatGrid[12].innerHTML, lineStatGrid[13].innerHTML], "Paire_1");
+  }
+  //verify if paire 1 is full and populate grid stats
+  if (lineStatGrid[14].innerHTML != '' && lineStatGrid[15].innerHTML != '') {
+    console.log('paire 2 full');
+    getValueFromdef([lineStatGrid[14].innerHTML, lineStatGrid[15].innerHTML], "Paire_2");
+  }
+  //verify if paire 1 is full and populate grid stats
+  if (lineStatGrid[16].innerHTML != '' && lineStatGrid[17].innerHTML != '') {
+    console.log('paire 3 full');
+    getValueFromdef([lineStatGrid[16].innerHTML, lineStatGrid[17].innerHTML], "Paire_3");
   }
   return false;
 }
@@ -427,6 +553,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     item.addEventListener('dragleave', handleDragLeave);
     item.addEventListener('dragend', handleDragEnd);
     item.addEventListener('drop', handleDrop);
-    item.addEventListener('mouseover', event_getValuePlayer)
+    item.addEventListener('dblclick', event_getValuePlayer)
   });
 });

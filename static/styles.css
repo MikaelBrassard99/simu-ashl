@@ -127,6 +127,13 @@
     vertical-align: middle;
   }
 
+  .child p{
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    height: fit-content;
+    color: red;
+  }
+
   #table_line {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
@@ -141,7 +148,8 @@
   #table_line th {
     padding-top: 12px;
     padding-bottom: 12px;
-    text-align: left;
+    text-align: center;
+    min-width: 50px;
     background-color: #c4c4c4;
     color: white;
   }
