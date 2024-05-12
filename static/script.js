@@ -482,6 +482,30 @@ function handleDrop(e) {
 
   lineStatGrid[16] = document.getElementById("DG_Line_3");
   lineStatGrid[17] = document.getElementById("DD_Line_3");
+  
+  localStorage.setItem("LW_Line_1", lineStatGrid[0].innerHTML);
+  localStorage.setItem("LW_Line_2", lineStatGrid[1].innerHTML);
+  localStorage.setItem("LW_Line_3", lineStatGrid[2].innerHTML);
+  localStorage.setItem("LW_Line_4", lineStatGrid[3].innerHTML);
+
+  localStorage.setItem("C_Line_1", lineStatGrid[4].innerHTML);
+  localStorage.setItem("C_Line_2", lineStatGrid[5].innerHTML);
+  localStorage.setItem("C_Line_3", lineStatGrid[6].innerHTML);
+  localStorage.setItem("C_Line_4", lineStatGrid[7].innerHTML);
+
+  localStorage.setItem("RW_Line_1", lineStatGrid[8].innerHTML);
+  localStorage.setItem("RW_Line_2", lineStatGrid[9].innerHTML);
+  localStorage.setItem("RW_Line_3", lineStatGrid[10].innerHTML);
+  localStorage.setItem("RW_Line_4", lineStatGrid[11].innerHTML);
+
+  localStorage.setItem("DG_Line_1", lineStatGrid[12].innerHTML);
+  localStorage.setItem("DD_Line_1", lineStatGrid[13].innerHTML);
+
+  localStorage.setItem("DG_Line_2", lineStatGrid[14].innerHTML);
+  localStorage.setItem("DD_Line_2", lineStatGrid[15].innerHTML);
+
+  localStorage.setItem("DG_Line_3", lineStatGrid[16].innerHTML);
+  localStorage.setItem("DD_Line_3", lineStatGrid[17].innerHTML);
 
 
   //verify if line 1 is full and populate grid stats
@@ -554,4 +578,29 @@ document.addEventListener('DOMContentLoaded', (event) => {
     item.addEventListener('drop', handleDrop);
     item.addEventListener('dblclick', event_getValuePlayer)
   });
+
+    //Populate all stats from line
+    document.getElementById("LW_Line_1").innerHTML = localStorage.getItem("LW_Line_1");
+    document.getElementById("LW_Line_2").innerHTML = localStorage.getItem("LW_Line_2");
+    document.getElementById("LW_Line_3").innerHTML = localStorage.getItem("LW_Line_3");
+    document.getElementById("LW_Line_4").innerHTML = localStorage.getItem("LW_Line_4");
+  
+    document.getElementById("C_Line_1").innerHTML = localStorage.getItem("C_Line_1");
+    document.getElementById("C_Line_2").innerHTML = localStorage.getItem("C_Line_2");
+    document.getElementById("C_Line_3").innerHTML = localStorage.getItem("C_Line_3");
+    document.getElementById("C_Line_4").innerHTML = localStorage.getItem("C_Line_4");
+  
+    document.getElementById("RW_Line_1").innerHTML = localStorage.getItem("RW_Line_1");
+    document.getElementById("RW_Line_2").innerHTML = localStorage.getItem("RW_Line_2");
+    document.getElementById("RW_Line_3").innerHTML = localStorage.getItem("RW_Line_3");
+    document.getElementById("RW_Line_4").innerHTML = localStorage.getItem("RW_Line_4");
+  
+    document.getElementById("DG_Line_1").innerHTML = localStorage.getItem("DG_Line_1");
+    document.getElementById("DD_Line_1").innerHTML = localStorage.getItem("DD_Line_1");
+  
+    document.getElementById("DG_Line_2").innerHTML = localStorage.getItem("DG_Line_2");
+    document.getElementById("DD_Line_2").innerHTML = localStorage.getItem("DD_Line_2");
+  
+    document.getElementById("DG_Line_3").innerHTML = localStorage.getItem("DG_Line_3");
+    document.getElementById("DD_Line_3").innerHTML = localStorage.getItem("DD_Line_3");
 });

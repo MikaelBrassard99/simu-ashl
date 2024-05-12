@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, make_response, render_template, request, jsonify
 # importing pandas as pd
 import pandas as pd
 import numpy as np
@@ -16,6 +16,15 @@ config_bd = {
 
 bd = 'ASHL13-STHS.db'
 
+@app.after_request
+def add_header(response):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+    response.headers['Cache-Control'] = 'public, max-age=300'
+    return response
 
 @app.route("/")
 def allStats():
