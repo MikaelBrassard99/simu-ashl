@@ -14,18 +14,16 @@ config_bd = {
 }
 
 
+bd = 'ASHL13-STHS.db'
+
+
 @app.route("/")
-# def main():
-#     return render_template("main.html", python_variable=data)
- 
- 
-# @app.route("/allStats")
 def allStats():
   
-    conn = sqlite3.connect('ASHL13-STHS.db')
+    conn = sqlite3.connect(bd)
 
     #sql query to match PalyerInfo and PlayerStat who play Pro(status > 1) and have played a minimum of MinimumGamePlayed in config_bd variable
-    queryGeneral = f'SELECT PlayerProSeasonStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PlayerProSeasonStat.GP, PlayerProSeasonStat.Shots, PlayerProSeasonStat.G, PlayerProSeasonStat.A, PlayerProSeasonStat.P, PlayerProSeasonStat.PlusMinus, PlayerProSeasonStat.Pim, PlayerProSeasonStat.ShotsBlock, PlayerProSeasonStat.OwnShotsBlock, PlayerProSeasonStat.OwnShotsMissGoal, PlayerProSeasonStat.Hits, PlayerProSeasonStat.HitsTook, PlayerProSeasonStat.GW, PlayerProSeasonStat.GT, PlayerProSeasonStat.FaceOffWon, PlayerProSeasonStat.FaceOffTotal, PlayerProSeasonStat.PPG, PlayerProSeasonStat.PPA, PlayerProSeasonStat.PPP, PlayerProSeasonStat.PPShots, PlayerProSeasonStat.PKG, PlayerProSeasonStat.PKA, PlayerProSeasonStat.PKP, PlayerProSeasonStat.PKShots, PlayerProSeasonStat.GiveAway, PlayerProSeasonStat.TakeAway, PlayerProSeasonStat.PuckPossesionTime  FROM PlayerProSeasonStat LEFT JOIN PlayerInfo ON PlayerProSeasonStat.Number = PlayerInfo.Number where PlayerProSeasonStat.GP <> 0 and PlayerInfo.Status1 > 1 ORDER BY PlayerInfo.Name' 
+    queryGeneral = 'SELECT PlayerProSeasonStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PlayerProSeasonStat.GP, PlayerProSeasonStat.Shots, PlayerProSeasonStat.G, PlayerProSeasonStat.A, PlayerProSeasonStat.P, PlayerProSeasonStat.PlusMinus, PlayerProSeasonStat.Pim, PlayerProSeasonStat.ShotsBlock, PlayerProSeasonStat.OwnShotsBlock, PlayerProSeasonStat.OwnShotsMissGoal, PlayerProSeasonStat.Hits, PlayerProSeasonStat.HitsTook, PlayerProSeasonStat.GW, PlayerProSeasonStat.GT, PlayerProSeasonStat.FaceOffWon, PlayerProSeasonStat.FaceOffTotal, PlayerProSeasonStat.PPG, PlayerProSeasonStat.PPA, PlayerProSeasonStat.PPP, PlayerProSeasonStat.PPShots, PlayerProSeasonStat.PKG, PlayerProSeasonStat.PKA, PlayerProSeasonStat.PKP, PlayerProSeasonStat.PKShots, PlayerProSeasonStat.GiveAway, PlayerProSeasonStat.TakeAway, PlayerProSeasonStat.PuckPossesionTime  FROM PlayerProSeasonStat LEFT JOIN PlayerInfo ON PlayerProSeasonStat.Number = PlayerInfo.Number where PlayerProSeasonStat.GP <> 0 and PlayerInfo.Status1 > 1 ORDER BY PlayerInfo.Name' 
     df_gen = pd.read_sql(queryGeneral, conn)
     config_bd["MinimumGamePlayed"] = ((df_gen['GP'].max()/2))
 
@@ -34,8 +32,6 @@ def allStats():
     df_Fwd = pd.read_sql(queryForward, conn)
     df_Def = pd.read_sql(queryDefence, conn)
         
-
-    # playerSelect = pd.read_sql(queryDefence, conn)
     conn.close() 
     return render_template("allStats.html", league_data=df_gen, average_Def=generateOVStats(df_Def), average_Fwd=generateOVStats(df_Fwd), avg_league_stat_fwd=generateStats(df_Fwd, generalStatsColumns)[1], avg_league_stat_def=generateStats(df_Def, generalStatsColumns)[1], label_min_played_game = config_bd["MinimumGamePlayed"])
         # Handle other request methods
@@ -51,7 +47,7 @@ def updateChart():
         set_global(request.json)
     except:
         print("An exception occurred")    
-    conn = sqlite3.connect('ASHL13-STHS.db')
+    conn = sqlite3.connect(bd)
 
     if data:
         querySelectedPlayer = f'SELECT PlayerProSeasonStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PlayerProSeasonStat.GP, PlayerProSeasonStat.Shots, PlayerProSeasonStat.G, PlayerProSeasonStat.A, PlayerProSeasonStat.P, PlayerProSeasonStat.PlusMinus, PlayerProSeasonStat.Pim, PlayerProSeasonStat.ShotsBlock, PlayerProSeasonStat.OwnShotsBlock, PlayerProSeasonStat.OwnShotsMissGoal, PlayerProSeasonStat.Hits, PlayerProSeasonStat.HitsTook, PlayerProSeasonStat.GW, PlayerProSeasonStat.GT, PlayerProSeasonStat.FaceOffWon, PlayerProSeasonStat.FaceOffTotal, PlayerProSeasonStat.PPG, PlayerProSeasonStat.PPA, PlayerProSeasonStat.PPP, PlayerProSeasonStat.PPShots, PlayerProSeasonStat.PKG, PlayerProSeasonStat.PKA, PlayerProSeasonStat.PKP, PlayerProSeasonStat.PKShots, PlayerProSeasonStat.GiveAway, PlayerProSeasonStat.TakeAway, PlayerProSeasonStat.PuckPossesionTime  FROM PlayerProSeasonStat LEFT JOIN PlayerInfo ON PlayerProSeasonStat.Number = PlayerInfo.Number where PlayerInfo.Name = "{data}"'  
@@ -74,7 +70,7 @@ def updateChart():
 def updateChartMO():
     
     playerName = request.args.get('playerName')
-    conn = sqlite3.connect('ASHL13-STHS.db')
+    conn = sqlite3.connect(bd)
     querySelectedPlayer = f'SELECT PlayerProSeasonStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PlayerProSeasonStat.GP, PlayerProSeasonStat.Shots, PlayerProSeasonStat.G, PlayerProSeasonStat.A, PlayerProSeasonStat.P, PlayerProSeasonStat.PlusMinus, PlayerProSeasonStat.Pim, PlayerProSeasonStat.ShotsBlock, PlayerProSeasonStat.OwnShotsBlock, PlayerProSeasonStat.OwnShotsMissGoal, PlayerProSeasonStat.Hits, PlayerProSeasonStat.HitsTook, PlayerProSeasonStat.GW, PlayerProSeasonStat.GT, PlayerProSeasonStat.FaceOffWon, PlayerProSeasonStat.FaceOffTotal, PlayerProSeasonStat.PPG, PlayerProSeasonStat.PPA, PlayerProSeasonStat.PPP, PlayerProSeasonStat.PPShots, PlayerProSeasonStat.PKG, PlayerProSeasonStat.PKA, PlayerProSeasonStat.PKP, PlayerProSeasonStat.PKShots, PlayerProSeasonStat.GiveAway, PlayerProSeasonStat.TakeAway, PlayerProSeasonStat.PuckPossesionTime  FROM PlayerProSeasonStat LEFT JOIN PlayerInfo ON PlayerProSeasonStat.Number = PlayerInfo.Number where PlayerInfo.Name = "{playerName}"'  
     df_PlayerSel = pd.read_sql(querySelectedPlayer, conn)
     teamNameFromPlayerSel = df_PlayerSel['TeamName'][0]
@@ -90,7 +86,7 @@ def updateChartMO():
 def getStat():
    
     playerName = request.args.get('playerName')
-    conn = sqlite3.connect('ASHL13-STHS.db')
+    conn = sqlite3.connect(bd)
 
     querySelectedPlayer = f'SELECT PlayerProSeasonStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PlayerProSeasonStat.GP, PlayerProSeasonStat.Shots, PlayerProSeasonStat.G, PlayerProSeasonStat.A, PlayerProSeasonStat.P, PlayerProSeasonStat.PlusMinus, PlayerProSeasonStat.Pim, PlayerProSeasonStat.ShotsBlock, PlayerProSeasonStat.OwnShotsBlock, PlayerProSeasonStat.OwnShotsMissGoal, PlayerProSeasonStat.Hits, PlayerProSeasonStat.HitsTook, PlayerProSeasonStat.GW, PlayerProSeasonStat.GT, PlayerProSeasonStat.FaceOffWon, PlayerProSeasonStat.FaceOffTotal, PlayerProSeasonStat.PPG, PlayerProSeasonStat.PPA, PlayerProSeasonStat.PPP, PlayerProSeasonStat.PPShots, PlayerProSeasonStat.PKG, PlayerProSeasonStat.PKA, PlayerProSeasonStat.PKP, PlayerProSeasonStat.PKShots, PlayerProSeasonStat.GiveAway, PlayerProSeasonStat.TakeAway, PlayerProSeasonStat.PuckPossesionTime  FROM PlayerProSeasonStat LEFT JOIN PlayerInfo ON PlayerProSeasonStat.Number = PlayerInfo.Number where PlayerInfo.Name = "{playerName}"'  
 
@@ -108,7 +104,7 @@ def getStat():
 #get stats from foward LW C RW
 @app.route("/getStatFromPlayersName", methods=['GET', 'POST'])
 def getStats():
-    conn = sqlite3.connect('ASHL13-STHS.db')
+    conn = sqlite3.connect(bd)
     playerName1 = request.args.get('playerName1')
     playerName2 = request.args.get('playerName2')
     playerName3 = request.args.get('playerName3')
@@ -129,7 +125,7 @@ def getStats():
 #get stats from defensman DG DD
 @app.route("/getStatFromDefsName", methods=['GET', 'POST'])
 def getStatsD():
-    conn = sqlite3.connect('ASHL13-STHS.db')
+    conn = sqlite3.connect(bd)
     playerName1 = request.args.get('playerName1')
     playerName2 = request.args.get('playerName2')
     if playerName1 != '':
