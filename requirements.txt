@@ -1,0 +1,43 @@
+TBB==0.2
+tblib @ file:///Users/ktietz/demo/mc3/conda-bld/tblib_1629402031467/work
+tenacity @ file:///croot/tenacity_1682972284834/work
+text-unidecode @ file:///Users/ktietz/demo/mc3/conda-bld/text-unidecode_1629401354553/work
+textdistance @ file:///tmp/build/80754af9/textdistance_1612461398012/work
+thop==0.1.1.post2209072238
+threadpoolctl @ file:///Users/ktietz/demo/mc3/conda-bld/threadpoolctl_1629802263681/work
+three-merge @ file:///tmp/build/80754af9/three-merge_1607553261110/work
+tifffile @ file:///croot/tifffile_1695107451082/work
+tldextract @ file:///opt/conda/conda-bld/tldextract_1646638314385/work
+tokenizers @ file:///croot/tokenizers_1687191909486/work
+toml @ file:///tmp/build/80754af9/toml_1616166611790/work
+tomlkit @ file:///work/ci_py311/tomlkit_1676823218885/work
+toolz @ file:///work/ci_py311/toolz_1676827522705/work
+torch==2.3.0
+torchvision==0.18.0
+tqdm @ file:///croot/tqdm_1679561862951/work
+transformers @ file:///croot/transformers_1693308319445/work
+triton==2.3.0
+Twisted @ file:///croot/twisted_1683796889247/work
+typing_extensions==4.11.0
+tzdata @ file:///croot/python-tzdata_1690578112552/work
+uc-micro-py @ file:///work/ci_py311/uc-micro-py_1676828889155/work
+ujson @ file:///work/ci_py311/ujson_1676828903327/work
+ultralytics==8.2.13
+Unidecode @ file:///tmp/build/80754af9/unidecode_1614712377438/work
+w3lib @ file:///Users/ktietz/demo/mc3/conda-bld/w3lib_1629359764703/work
+watchdog==4.0.0
+websocket-client @ file:///work/ci_py311/websocket-client_1676824890004/work
+Werkzeug==3.0.3
+whatthepatch @ file:///work/ci_py311/whatthepatch_1677708379946/work
+wrapt @ file:///work/ci_py311/wrapt_1676827586170/work
+wurlitzer @ file:///work/ci_py311/wurlitzer_1676843053614/work
+xarray @ file:///croot/xarray_1689041471350/work
+xxhash @ file:///work/ci_py311/python-xxhash_1676842384694/work
+xyzservices @ file:///work/ci_py311/xyzservices_1676828923127/work
+y-py @ file:///croot/y-py_1683555143488/work
+yapf @ file:///tmp/build/80754af9/yapf_1615749224965/work
+yarl @ file:///work/ci_py311/yarl_1676827604591/work
+ypy-websocket @ file:///croot/ypy-websocket_1684171737040/work
+zict @ file:///croot/zict_1682698729376/work
+zope.interface @ file:///work/ci_py311/zope.interface_1676905896080/work
+zstandard @ file:///work/ci_py311_2/zstandard_1679339489613/work

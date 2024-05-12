@@ -15,11 +15,11 @@ config_bd = {
 
 
 @app.route("/")
-def main():
-    return render_template("main.html", python_variable=data)
+# def main():
+#     return render_template("main.html", python_variable=data)
  
  
-@app.route("/allStats")
+# @app.route("/allStats")
 def allStats():
   
     conn = sqlite3.connect('ASHL13-STHS.db')
