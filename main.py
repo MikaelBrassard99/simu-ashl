@@ -39,6 +39,10 @@ def allStats():
 def graphChart():
     return render_template("billy_beane.html")
 
+@app.route("/about")
+def aboutPage():
+    return render_template("about.html")
+
 #***********************REGARDER comment handle les joueurs intouvés**********************    
 @app.route("/updateChart", methods=['GET', 'POST'])
 def updateChart():

@@ -1,26 +1,10 @@
 <!DOCTYPE html>
-<html>
-
-<head>
-    <title id="result"></title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
-    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-    <script src="https://d3js.org/d3.v7.js"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-
+<html lang="fr">
+{% include 'header.html' %}
 <body>
     <!-- drop down player select -->
     <div class="table-wrap">
-
-        <head>All player name</head>
+        <p>All player name</p>
         <div class="menu">
             <input placeholder="Enter player name here" name="name" list="playerSelected" />
             <datalist id="playerSelected">
@@ -760,6 +744,7 @@
     </div>
     <!-- general player stats -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='script_nav.js') }}"></script>
     <script>
         var avgdef = {{ avg_league_stat_def | safe }};
         var avgatt = {{ avg_league_stat_fwd | safe }};
