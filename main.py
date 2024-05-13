@@ -15,6 +15,7 @@ config_bd = {
 
 
 bd = 'ASHL13-STHS.db'
+bd_draft = 'ashl2024_draft.db'
 
 @app.after_request
 def add_header(response):
@@ -51,6 +52,18 @@ def graphChart():
 @app.route("/about")
 def aboutPage():
     return render_template("about.html")
+
+@app.route("/draft")
+def draft():
+    conn = sqlite3.connect(bd_draft)
+    queryGeneral = 'SELECT player_infos.player, player_infos.team, player_infos.league, player_infos.born, player_infos.ht, player_infos.wt, player_infos.s, player_stats.gp, player_stats.g, player_stats.a, player_stats.tp, player_stats.pim  FROM player_infos LEFT JOIN player_stats ON player_infos.id = player_stats.id ORDER BY player_infos.id' 
+    
+    pd.options.display.float_format = '{:,.0f}'.format
+    
+    df_gen = pd.read_sql(queryGeneral, conn)
+    #add style to html dataframe
+    df_styled = df_gen.to_html(classes='sortable').replace('<td>', '<td align="middle">').replace('<th>', '<th align="middle">')
+    return render_template('draft.html', data = df_styled)
 
 #***********************REGARDER comment handle les joueurs intouvés**********************    
 @app.route("/updateChart", methods=['GET', 'POST'])
@@ -163,8 +176,7 @@ def openStats():
 
     # Render HTML template with the HTML table
     return render_template('openStats.html', table=html_table)
-  
-  
+   
 def set_global(data_in):
     global data
     data = data_in

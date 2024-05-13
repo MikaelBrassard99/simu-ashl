@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% include 'header.html' %}
+    <body>
+        <p>ASHL 2024 empty draft</p>
+        <div class="table-wrap" style="overflow-x: scroll;">
+            {{ data | safe }}
+        </div>
+        <script src="{{ url_for('static', filename='script_nav.js') }}"></script>
+    </body>
+</html>
