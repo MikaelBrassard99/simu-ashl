@@ -537,15 +537,6 @@ function handleDragLeave(e) {
   this.classList.remove('over');
 }
 
-function popupFn(e) {
-  document.getElementById(
-      "overlay"
-  ).style.display = "block";
-  document.getElementById(
-      "popupDialog"
-  ).style.display = "block";
-}
-
 document.addEventListener('DOMContentLoaded', (event) => {
   let items = document.querySelectorAll('.container .box');
   items.forEach(function (item) {
