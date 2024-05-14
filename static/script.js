@@ -325,10 +325,10 @@ let playerSelStat = [];
 let playerSelStatFiltered = [];
 let avgStat = [];
 let labels = [];
-function event_getValuePlayer(e) {
-  if (this.innerHTML != '') {
+function event_getValuePlayer(params) {
+  if (params != '') {
     var url = '/getStatFromPlayerName';
-    var data = { playerName: this.innerHTML };
+    var data = { playerName: params };
     $.get(url, data, function (response) {
       if (response !== null && typeof response !== "undefined") {
         //all PlayerStat
@@ -537,6 +537,17 @@ function handleDragLeave(e) {
   this.classList.remove('over');
 }
 
+function myFunction(e) {
+  var txt;
+  console.log(this);
+  console.log(e);
+  if (confirm("OK: montrer les statistiques, Cancel: supprimer le joueur")) {
+    event_getValuePlayer(this.innerHTML);
+  } else {
+    this.innerHTML = "";
+  }
+}
+
 document.addEventListener('DOMContentLoaded', (event) => {
   let items = document.querySelectorAll('.container .box');
   items.forEach(function (item) {
@@ -546,7 +557,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     item.addEventListener('dragleave', handleDragLeave);
     item.addEventListener('dragend', handleDragEnd);
     item.addEventListener('drop', handleDrop);
-    item.addEventListener('dblclick', event_getValuePlayer);
+    item.addEventListener('dblclick', myFunction);
   });
 
     //Populate all stats from line
