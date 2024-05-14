@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr">
 {% include 'header.html' %}
+
 <body>
     <!-- drop down player select -->
     <div class="table-wrap">
-        <p>All player name</p>
+        <div style="display: flex; justify-content: space-between;">
+            <p style="flex-basis: 49.5%;">Selectionnez un jouer à ajouter à la visibilité</p>
+            <p id="PlayerName" style="flex-basis: 49.5%;"></p>
+        </div>
         <div class="menu">
-            <input placeholder="Enter player name here" name="name" list="playerSelected" />
+            <input class="playerSel" placeholder="Enter player name here" name="name" list="playerSelected" />
             <datalist id="playerSelected">
                 {% for index, row in league_data.iterrows() %}
                 <option value="{{ row['Name'] }}">
@@ -16,7 +20,23 @@
             </datalist>
         </div>
     </div>
-    <p id="PlayerName"></p>
+
+    <p>OU</p>
+
+    <!-- drop down player select -->
+    <div class="table-wrap">
+        <p>Initialisez la table a l'aide des lignes d'une</p>
+        <div class="menu">
+            <input class="teamSel" placeholder="Enter team name here" name="name" list="teamSelected" />
+            <datalist id="teamSelected">
+                {% for index, row in team_data.iterrows() %}
+                <option value="{{ row['Name'] }}">
+                    {{ row['Name'] }}
+                </option>
+                {% endfor %}
+            </datalist>
+        </div>
+    </div>
     <!-- stats gen off/def, repopulate tds when playerSelcted change -->
     <div class="table-wrap" style="overflow-x: scroll;">
         <p>Statistiques (parties jouées min en comparaison : {{label_min_played_game}})</p>
@@ -197,7 +217,7 @@
                             <tr>
                                 <th scope="col">LW</th>
                                 <th scope="col">C</th>
-                                <th scope="col">RW  </th>
+                                <th scope="col">RW </th>
                             </tr>
                             <tr>
                                 <td>
@@ -735,7 +755,7 @@
                                     <div id="DI_Paire_3"></div>
                                 </td>
                             </tr>
-                        </table>     
+                        </table>
                     </tr>
                 </th>
 

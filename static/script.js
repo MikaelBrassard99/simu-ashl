@@ -63,11 +63,13 @@ let playerChart = new Chart("radarChart", {
 });
 
 //get selected value from playerName scoll
-const input = document.querySelector("input");
+const inputPlayer = document.querySelector(".playerSel");
+const inputTeam = document.querySelector(".teamSel");
 
-input.addEventListener("change", getSelectedValue);
+inputPlayer.addEventListener("change", getSelectedPlayerValue);
+inputTeam.addEventListener("change", getSelectedTeamValue);
 
-function getSelectedValue(e) {
+function getSelectedPlayerValue(e) {
   $(document).ready(function () {
     var div = document.createElement("div");
     let value = e.target.value;
@@ -97,6 +99,51 @@ function getSelectedValue(e) {
         catch {
           document.getElementById("playerSel").appendChild(div);
         }
+
+        $("#result").text("Processed value: " + value);
+        synchRadarChart();
+      },
+      error: function (xhr, status, error) { },
+    });
+  });
+}
+function getSelectedTeamValue(e) {
+  $(document).ready(function () {
+    var div = document.createElement("div");
+    let value = e.target.value;
+    let rcvData;
+    $.ajax({
+      url: "/getPlayersStatsFromTeam",
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(value),
+      success: function (response) {
+        //create a drag and drop div of the player selected
+        rcvData = JSON.parse(response.values)[0];
+        //Populate all stats from line
+        document.getElementById("LW_Line_1").innerHTML = rcvData.Line15vs5ForwardLeftWing;
+        document.getElementById("LW_Line_2").innerHTML = rcvData.Line25vs5ForwardLeftWing;
+        document.getElementById("LW_Line_3").innerHTML = rcvData.Line35vs5ForwardLeftWing;
+        document.getElementById("LW_Line_4").innerHTML = rcvData.Line45vs5ForwardLeftWing;
+
+        document.getElementById("C_Line_1").innerHTML = rcvData.Line15vs5ForwardCenter;
+        document.getElementById("C_Line_2").innerHTML = rcvData.Line25vs5ForwardCenter;
+        document.getElementById("C_Line_3").innerHTML = rcvData.Line35vs5ForwardCenter;
+        document.getElementById("C_Line_4").innerHTML = rcvData.Line45vs5ForwardCenter;
+
+        document.getElementById("RW_Line_1").innerHTML = rcvData.Line15vs5ForwardRightWing;
+        document.getElementById("RW_Line_2").innerHTML = rcvData.Line25vs5ForwardRightWing;
+        document.getElementById("RW_Line_3").innerHTML = rcvData.Line35vs5ForwardRightWing;
+        document.getElementById("RW_Line_4").innerHTML = rcvData.Line45vs5ForwardRightWing;
+
+        document.getElementById("DG_Line_1").innerHTML = rcvData.Line15vs5DefenseDefense1;
+        document.getElementById("DD_Line_1").innerHTML = rcvData.Line15vs5DefenseDefense2;
+
+        document.getElementById("DG_Line_2").innerHTML = rcvData.Line25vs5DefenseDefense1;
+        document.getElementById("DD_Line_2").innerHTML = rcvData.Line25vs5DefenseDefense2;
+
+        document.getElementById("DG_Line_3").innerHTML = rcvData.Line35vs5DefenseDefense1;
+        document.getElementById("DD_Line_3").innerHTML = rcvData.Line35vs5DefenseDefense2;
 
         $("#result").text("Processed value: " + value);
         synchRadarChart();
@@ -201,8 +248,8 @@ function updateRadarChart(avg_league_stat_def, avg_league_stat_fwd) {
     playerChart.update();
   });
 }
-function updateDataOnMouseOver(playerName, avg_league_stat_def, avg_league_stat_fwd) {
-  var url = '/updateChartMouseOver';
+function updateDataOnDblClick(playerName, avg_league_stat_def, avg_league_stat_fwd) {
+  var url = '/updateDataOnDblClick';
   var data = { playerName: playerName };
   $.get(url, data, function (response) {
     // Process the received JSON data
@@ -297,8 +344,7 @@ function event_getValuePlayer(e) {
         for (let i = 0; i < labels.length; i++) {
           playerSelStatFiltered[i] = playerSelStat[labels[i]];
         }
-        console.log(playerStatName, playerTeamName, playerSelStatFiltered);
-        updateDataOnMouseOver(playerStatName, gbl_avg_league_stat_def, gbl_avg_league_stat_fwd);
+        updateDataOnDblClick(playerStatName, gbl_avg_league_stat_def, gbl_avg_league_stat_fwd);
       }
     });
   }
@@ -322,7 +368,6 @@ function getValueFromPlayer(playerNames, provider) {
         player1Stat = JSON.parse(response.valuesP1)[0];
         player2Stat = JSON.parse(response.valuesP2)[0];
         player3Stat = JSON.parse(response.valuesP3)[0];
-        console.log(player1Stat, player2Stat, player3Stat)
         labels = response.labels;
         for (let i = 0; i < labels.length; i++) {
           player1StatFiltered[i] = player1Stat[labels[i]];
@@ -338,7 +383,6 @@ function getValueFromPlayer(playerNames, provider) {
           div.innerHTML = '';
         }
       }
-      console.log(player1StatFiltered, player2StatFiltered, player3StatFiltered);
     }
   });
 }
@@ -351,7 +395,6 @@ function getValueFromdef(playerNames, provider) {
       if (response.valuesP1 != '' && response.valuesP2 != '' && response.valuesP3 != '') {
         player1Stat = JSON.parse(response.valuesP1)[0];
         player2Stat = JSON.parse(response.valuesP2)[0];
-        console.log(player1Stat, player2Stat)
         labels = response.labels;
         for (let i = 0; i < labels.length; i++) {
           player1StatFiltered[i] = player1Stat[labels[i]];
@@ -366,7 +409,6 @@ function getValueFromdef(playerNames, provider) {
           div.innerHTML = '';
         }
       }
-      console.log(player1StatFiltered, player2StatFiltered);
     }
   });
 }
@@ -445,37 +487,30 @@ function handleDrop(e) {
 
   //verify if line 1 is full and populate grid stats
   if (lineStatGrid[0].innerHTML != '' && lineStatGrid[4].innerHTML != '' && lineStatGrid[8].innerHTML != '') {
-    console.log('line 1 full', lineStatGrid[0].innerHTML, lineStatGrid[4].innerHTML, lineStatGrid[8].innerHTML);
     getValueFromPlayer([lineStatGrid[0].innerHTML, lineStatGrid[4].innerHTML, lineStatGrid[8].innerHTML], "Line_1");
   }
   //verify if line 2 is full and populate grid stats
   if (lineStatGrid[1].innerHTML != '' && lineStatGrid[5].innerHTML != '' && lineStatGrid[9].innerHTML != '') {
-    console.log('line 2 full');
     getValueFromPlayer([lineStatGrid[1].innerHTML, lineStatGrid[5].innerHTML, lineStatGrid[9].innerHTML], "Line_2");
   }
   //verify if line 3 is full and populate grid stats
   if (lineStatGrid[2].innerHTML != '' && lineStatGrid[6].innerHTML != '' && lineStatGrid[10].innerHTML != '') {
-    console.log('line 3 full');
     getValueFromPlayer([lineStatGrid[2].innerHTML, lineStatGrid[6].innerHTML, lineStatGrid[10].innerHTML], "Line_3");
   }
   //verify if line 4 is full and populate grid stats
   if (lineStatGrid[3].innerHTML != '' && lineStatGrid[7].innerHTML != '' && lineStatGrid[11].innerHTML != '') {
-    console.log('line 4 full');
     getValueFromPlayer([lineStatGrid[3].innerHTML, lineStatGrid[7].innerHTML, lineStatGrid[11].innerHTML], "Line_4");
   }
   //verify if paire 1 is full and populate grid stats
   if (lineStatGrid[12].innerHTML != '' && lineStatGrid[13].innerHTML != '') {
-    console.log('paire 1 full');
     getValueFromdef([lineStatGrid[12].innerHTML, lineStatGrid[13].innerHTML], "Paire_1");
   }
   //verify if paire 1 is full and populate grid stats
   if (lineStatGrid[14].innerHTML != '' && lineStatGrid[15].innerHTML != '') {
-    console.log('paire 2 full');
     getValueFromdef([lineStatGrid[14].innerHTML, lineStatGrid[15].innerHTML], "Paire_2");
   }
   //verify if paire 1 is full and populate grid stats
   if (lineStatGrid[16].innerHTML != '' && lineStatGrid[17].innerHTML != '') {
-    console.log('paire 3 full');
     getValueFromdef([lineStatGrid[16].innerHTML, lineStatGrid[17].innerHTML], "Paire_3");
   }
   return false;
@@ -502,6 +537,15 @@ function handleDragLeave(e) {
   this.classList.remove('over');
 }
 
+function popupFn(e) {
+  document.getElementById(
+      "overlay"
+  ).style.display = "block";
+  document.getElementById(
+      "popupDialog"
+  ).style.display = "block";
+}
+
 document.addEventListener('DOMContentLoaded', (event) => {
   let items = document.querySelectorAll('.container .box');
   items.forEach(function (item) {
@@ -511,7 +555,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     item.addEventListener('dragleave', handleDragLeave);
     item.addEventListener('dragend', handleDragEnd);
     item.addEventListener('drop', handleDrop);
-    item.addEventListener('dblclick', event_getValuePlayer)
+    item.addEventListener('dblclick', event_getValuePlayer);
   });
 
     //Populate all stats from line

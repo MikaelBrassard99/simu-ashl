@@ -34,7 +34,11 @@ def allStats():
 
     #sql query to match PalyerInfo and PlayerStat who play Pro(status > 1) and have played a minimum of MinimumGamePlayed in config_bd variable
     queryGeneral = 'SELECT PlayerProSeasonStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PlayerProSeasonStat.GP, PlayerProSeasonStat.Shots, PlayerProSeasonStat.G, PlayerProSeasonStat.A, PlayerProSeasonStat.P, PlayerProSeasonStat.PlusMinus, PlayerProSeasonStat.Pim, PlayerProSeasonStat.ShotsBlock, PlayerProSeasonStat.OwnShotsBlock, PlayerProSeasonStat.OwnShotsMissGoal, PlayerProSeasonStat.Hits, PlayerProSeasonStat.HitsTook, PlayerProSeasonStat.GW, PlayerProSeasonStat.GT, PlayerProSeasonStat.FaceOffWon, PlayerProSeasonStat.FaceOffTotal, PlayerProSeasonStat.PPG, PlayerProSeasonStat.PPA, PlayerProSeasonStat.PPP, PlayerProSeasonStat.PPShots, PlayerProSeasonStat.PKG, PlayerProSeasonStat.PKA, PlayerProSeasonStat.PKP, PlayerProSeasonStat.PKShots, PlayerProSeasonStat.GiveAway, PlayerProSeasonStat.TakeAway, PlayerProSeasonStat.PuckPossesionTime  FROM PlayerProSeasonStat LEFT JOIN PlayerInfo ON PlayerProSeasonStat.Number = PlayerInfo.Number where PlayerProSeasonStat.GP <> 0 and PlayerInfo.Status1 > 1 ORDER BY PlayerInfo.Name' 
+    queryTeam = 'SELECT TeamProInfo.Number, TeamProInfo.Name from TeamProInfo' 
+
     df_gen = pd.read_sql(queryGeneral, conn)
+    df_team = pd.read_sql(queryTeam, conn)
+
     config_bd["MinimumGamePlayed"] = ((df_gen['GP'].max()/2))
 
     queryForward = f'SELECT PlayerProSeasonStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PlayerProSeasonStat.GP, PlayerProSeasonStat.Shots, PlayerProSeasonStat.G, PlayerProSeasonStat.A, PlayerProSeasonStat.P, PlayerProSeasonStat.PlusMinus, PlayerProSeasonStat.Pim, PlayerProSeasonStat.ShotsBlock, PlayerProSeasonStat.OwnShotsBlock, PlayerProSeasonStat.OwnShotsMissGoal, PlayerProSeasonStat.Hits, PlayerProSeasonStat.HitsTook, PlayerProSeasonStat.GW, PlayerProSeasonStat.GT, PlayerProSeasonStat.FaceOffWon, PlayerProSeasonStat.FaceOffTotal, PlayerProSeasonStat.PPG, PlayerProSeasonStat.PPA, PlayerProSeasonStat.PPP, PlayerProSeasonStat.PPShots, PlayerProSeasonStat.PKG, PlayerProSeasonStat.PKA, PlayerProSeasonStat.PKP, PlayerProSeasonStat.PKShots, PlayerProSeasonStat.GiveAway, PlayerProSeasonStat.TakeAway, PlayerProSeasonStat.PuckPossesionTime  FROM PlayerProSeasonStat LEFT JOIN PlayerInfo ON PlayerProSeasonStat.Number = PlayerInfo.Number where  PlayerInfo.Status1 > 1 and PlayerInfo.PosD = "False" and PlayerProSeasonStat.GP > "{config_bd["MinimumGamePlayed"]}"'
@@ -43,7 +47,7 @@ def allStats():
     df_Def = pd.read_sql(queryDefence, conn)
         
     conn.close() 
-    return render_template("allStats.html", league_data=df_gen, average_Def=generateOVStats(df_Def), average_Fwd=generateOVStats(df_Fwd), avg_league_stat_fwd=generateStats(df_Fwd, generalStatsColumns)[1], avg_league_stat_def=generateStats(df_Def, generalStatsColumns)[1], label_min_played_game = config_bd["MinimumGamePlayed"])
+    return render_template("allStats.html", league_data=df_gen, team_data=df_team, average_Def=generateOVStats(df_Def), average_Fwd=generateOVStats(df_Fwd), avg_league_stat_fwd=generateStats(df_Fwd, generalStatsColumns)[1], avg_league_stat_def=generateStats(df_Def, generalStatsColumns)[1], label_min_played_game = config_bd["MinimumGamePlayed"])
         # Handle other request methods
 @app.route("/graphChart")
 def graphChart():
@@ -56,12 +60,13 @@ def aboutPage():
 @app.route("/draft")
 def draft():
     conn = sqlite3.connect(bd_draft)
-    queryGeneral = 'SELECT player_infos.player, player_infos.team, player_infos.league, player_infos.born, player_infos.ht, player_infos.wt, player_infos.s, player_stats.gp, player_stats.g, player_stats.a, player_stats.tp, player_stats.pim  FROM player_infos LEFT JOIN player_stats ON player_infos.id = player_stats.id ORDER BY player_infos.id' 
+    queryGeneral = 'SELECT player_infos.player, player_infos.team, player_infos.league, player_infos.born, player_infos.ht, player_infos.wt, player_infos.s, player_stats.gp, player_stats.g, player_stats.a, player_stats.tpts, player_stats.pim , CAST(player_stats.tpts/player_stats.gp as charrarar) as ppm FROM player_infos LEFT JOIN player_stats ON player_infos.id = player_stats.id ORDER BY player_infos.id' 
     
     pd.options.display.float_format = '{:,.0f}'.format
-    
     df_gen = pd.read_sql(queryGeneral, conn)
-    #add style to html dataframe
+    falseSerie = ([False] * (df_gen.shape[0]))
+    df_gen.insert(2, 'isPicked', falseSerie, True)
+    
     df_styled = df_gen.to_html(classes='sortable').replace('<td>', '<td align="middle">').replace('<th>', '<th align="middle">')
     return render_template('draft.html', data = df_styled)
 
@@ -92,8 +97,24 @@ def updateChart():
     response_data = {'values':df_PlayerSel.to_json(orient='records'), 'labels': generalStatsColumns, 'playerSelSorted': generateOVStats(df_PlayerSel).to_json(orient='records'), 'playersFromTeamSel' : generateOVStats(df_AllPlayerFromTeamId).to_json(orient='records')} 
     return jsonify(response_data)
 
-@app.route("/updateChartMouseOver", methods=['GET', 'POST'])
-def updateChartMO():
+@app.route("/getPlayersStatsFromTeam", methods=['GET', 'POST'])
+def updateLine():
+   
+    teamName = request.json
+    conn = sqlite3.connect(bd)
+
+    querySelectedTeamLine = f'SELECT TeamProInfo.Number, TeamProInfo.Name, TeamProLines.Line15vs5ForwardCenter, TeamProLines.Line15vs5ForwardLeftWing, TeamProLines.Line15vs5ForwardRightWing, TeamProLines.Line15vs5DefenseDefense1, TeamProLines.Line15vs5DefenseDefense2, TeamProLines.Line25vs5ForwardCenter, TeamProLines.Line25vs5ForwardLeftWing, TeamProLines.Line25vs5ForwardRightWing, TeamProLines.Line25vs5DefenseDefense1, TeamProLines.Line25vs5DefenseDefense2, TeamProLines.Line35vs5ForwardCenter, TeamProLines.Line35vs5ForwardLeftWing, TeamProLines.Line35vs5ForwardRightWing, TeamProLines.Line35vs5DefenseDefense1, TeamProLines.Line35vs5DefenseDefense2, TeamProLines.Line45vs5ForwardCenter, TeamProLines.Line45vs5ForwardLeftWing, TeamProLines.Line45vs5ForwardRightWing FROM TeamProInfo LEFT JOIN TeamProLines ON TeamProInfo.Number = TeamProLines.TeamNumber WHERE TeamProLines.Day = 1 and TeamProInfo.Name = "{teamName}"' 
+
+    df_PlayerStatsFromTeam = pd.read_sql(querySelectedTeamLine, conn)
+    print(df_PlayerStatsFromTeam)
+
+    conn.close() 
+    #show all player of the team where the player is at
+    response_data = {'values':df_PlayerStatsFromTeam.to_json(orient='records')} 
+    return jsonify(response_data)
+
+@app.route("/updateDataOnDblClick", methods=['GET', 'POST'])
+def updateChartDC():
     
     playerName = request.args.get('playerName')
     conn = sqlite3.connect(bd)
