@@ -377,12 +377,6 @@ function getValueFromPlayer(playerNames, provider) {
           div.innerHTML = Math.round((player1StatFiltered[i] + player2StatFiltered[i] + player3StatFiltered[i]) / 3);
         }
       }
-      else {
-        for (let i = 0; i < labels.length; i++) {
-          var div = document.getElementById(`${labels[i]}_${provider}`)
-          div.innerHTML = '';
-        }
-      }
     }
   });
 }
@@ -412,6 +406,79 @@ function getValueFromdef(playerNames, provider) {
     }
   });
 }
+
+function populateGeneralLineStat(){
+  //verify if line 1 is full and populate grid stats
+  if (document.getElementById("LW_Line_1").innerHTML != '' && document.getElementById("C_Line_1").innerHTML != '' && document.getElementById("RW_Line_1").innerHTML != '') {
+    getValueFromPlayer([document.getElementById("LW_Line_1").innerHTML, document.getElementById("C_Line_1").innerHTML, document.getElementById("RW_Line_1").innerHTML], "Line_1");
+  }
+  else{
+      for (let i = 0; i < labels.length; i++) {
+        var div = document.getElementById(`${labels[i]}_Line_1`)
+        div.innerHTML = '';
+      }
+    }
+  //verify if line 2 is full and populate grid stats
+  if (document.getElementById("LW_Line_2").innerHTML != '' && document.getElementById("C_Line_2").innerHTML != '' && document.getElementById("RW_Line_2").innerHTML != '') {
+    getValueFromPlayer([document.getElementById("LW_Line_2").innerHTML, document.getElementById("C_Line_2").innerHTML, document.getElementById("RW_Line_2").innerHTML], "Line_2");
+  }
+  else{
+    for (let i = 0; i < labels.length; i++) {
+      var div = document.getElementById(`${labels[i]}_Line_2`)
+      div.innerHTML = '';
+    }
+  }
+  //verify if line 3 is full and populate grid stats
+  if (document.getElementById("LW_Line_3").innerHTML != '' && document.getElementById("C_Line_3").innerHTML != '' && document.getElementById("RW_Line_3").innerHTML != '') {
+    getValueFromPlayer([document.getElementById("LW_Line_3").innerHTML, document.getElementById("C_Line_3").innerHTML, document.getElementById("RW_Line_3").innerHTML], "Line_3");
+  }
+  else{
+    for (let i = 0; i < labels.length; i++) {
+      var div = document.getElementById(`${labels[i]}_Line_3`)
+      div.innerHTML = '';
+    }
+  }
+  //verify if line 4 is full and populate grid stats
+  if (document.getElementById("LW_Line_4").innerHTML != '' && document.getElementById("C_Line_4").innerHTML != '' && document.getElementById("RW_Line_4").innerHTML != '') {
+    getValueFromPlayer([document.getElementById("LW_Line_4").innerHTML, document.getElementById("C_Line_4").innerHTML, document.getElementById("RW_Line_4").innerHTML], "Line_4");
+  }
+  else{
+    for (let i = 0; i < labels.length; i++) {
+      var div = document.getElementById(`${labels[i]}_Line_4`)
+      div.innerHTML = '';
+    }
+  }
+  //verify if Line 1 is full and populate grid stats
+  if (document.getElementById("DG_Line_1").innerHTML != '' && document.getElementById("DD_Line_1").innerHTML != '') {
+    getValueFromdef([document.getElementById("DG_Line_1").innerHTML, document.getElementById("DD_Line_1").innerHTML], "Paire_1");
+  }
+  else{
+    for (let i = 0; i < labels.length; i++) {
+      var div = document.getElementById(`${labels[i]}_Paire_1`)
+      div.innerHTML = '';
+    }
+  }
+  //verify if Line 1 is full and populate grid stats
+  if (document.getElementById("DG_Line_2").innerHTML != '' && document.getElementById("DD_Line_2").innerHTML != '') {
+    getValueFromdef([document.getElementById("DG_Line_2").innerHTML, document.getElementById("DD_Line_2").innerHTML], "Paire_2");
+  }
+  else{
+    for (let i = 0; i < labels.length; i++) {
+      var div = document.getElementById(`${labels[i]}_Paire_2`)
+      div.innerHTML = '';
+    }
+  }
+  //verify if Line 1 is full and populate grid stats
+  if (document.getElementById("DG_Line_3").innerHTML != '' && document.getElementById("DD_Line_3").innerHTML != '') {
+    getValueFromdef([document.getElementById("DG_Line_3").innerHTML, document.getElementById("DD_Line_3").innerHTML], "Paire_3");
+  }
+  else{
+    for (let i = 0; i < labels.length; i++) {
+      var div = document.getElementById(`${labels[i]}_Paire_3`)
+      div.innerHTML = '';
+    }
+  }
+}
 //dragable functions
 function handleDragStart(e) {
   this.style.opacity = '0.4';
@@ -434,60 +501,7 @@ function handleDrop(e) {
     dragSrcEl.innerHTML = this.innerHTML;
     this.innerHTML = e.dataTransfer.getData('text/html');
   }
-
-  //Populate all stats from line
-  lineStatGrid[0] = document.getElementById("LW_Line_1");
-  lineStatGrid[1] = document.getElementById("LW_Line_2");
-  lineStatGrid[2] = document.getElementById("LW_Line_3");
-  lineStatGrid[3] = document.getElementById("LW_Line_4");
-
-  lineStatGrid[4] = document.getElementById("C_Line_1");
-  lineStatGrid[5] = document.getElementById("C_Line_2");
-  lineStatGrid[6] = document.getElementById("C_Line_3");
-  lineStatGrid[7] = document.getElementById("C_Line_4");
-
-  lineStatGrid[8] = document.getElementById("RW_Line_1");
-  lineStatGrid[9] = document.getElementById("RW_Line_2");
-  lineStatGrid[10] = document.getElementById("RW_Line_3");
-  lineStatGrid[11] = document.getElementById("RW_Line_4");
-
-  lineStatGrid[12] = document.getElementById("DG_Line_1");
-  lineStatGrid[13] = document.getElementById("DD_Line_1");
-
-  lineStatGrid[14] = document.getElementById("DG_Line_2");
-  lineStatGrid[15] = document.getElementById("DD_Line_2");
-
-  lineStatGrid[16] = document.getElementById("DG_Line_3");
-  lineStatGrid[17] = document.getElementById("DD_Line_3");
-  
-  //verify if line 1 is full and populate grid stats
-  if (lineStatGrid[0].innerHTML != '' && lineStatGrid[4].innerHTML != '' && lineStatGrid[8].innerHTML != '') {
-    getValueFromPlayer([lineStatGrid[0].innerHTML, lineStatGrid[4].innerHTML, lineStatGrid[8].innerHTML], "Line_1");
-  }
-  //verify if line 2 is full and populate grid stats
-  if (lineStatGrid[1].innerHTML != '' && lineStatGrid[5].innerHTML != '' && lineStatGrid[9].innerHTML != '') {
-    getValueFromPlayer([lineStatGrid[1].innerHTML, lineStatGrid[5].innerHTML, lineStatGrid[9].innerHTML], "Line_2");
-  }
-  //verify if line 3 is full and populate grid stats
-  if (lineStatGrid[2].innerHTML != '' && lineStatGrid[6].innerHTML != '' && lineStatGrid[10].innerHTML != '') {
-    getValueFromPlayer([lineStatGrid[2].innerHTML, lineStatGrid[6].innerHTML, lineStatGrid[10].innerHTML], "Line_3");
-  }
-  //verify if line 4 is full and populate grid stats
-  if (lineStatGrid[3].innerHTML != '' && lineStatGrid[7].innerHTML != '' && lineStatGrid[11].innerHTML != '') {
-    getValueFromPlayer([lineStatGrid[3].innerHTML, lineStatGrid[7].innerHTML, lineStatGrid[11].innerHTML], "Line_4");
-  }
-  //verify if paire 1 is full and populate grid stats
-  if (lineStatGrid[12].innerHTML != '' && lineStatGrid[13].innerHTML != '') {
-    getValueFromdef([lineStatGrid[12].innerHTML, lineStatGrid[13].innerHTML], "Paire_1");
-  }
-  //verify if paire 1 is full and populate grid stats
-  if (lineStatGrid[14].innerHTML != '' && lineStatGrid[15].innerHTML != '') {
-    getValueFromdef([lineStatGrid[14].innerHTML, lineStatGrid[15].innerHTML], "Paire_2");
-  }
-  //verify if paire 1 is full and populate grid stats
-  if (lineStatGrid[16].innerHTML != '' && lineStatGrid[17].innerHTML != '') {
-    getValueFromdef([lineStatGrid[16].innerHTML, lineStatGrid[17].innerHTML], "Paire_3");
-  }
+  populateGeneralLineStat();
   return false;
 }
 
@@ -558,6 +572,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
   
     document.getElementById("DG_Line_3").innerHTML = localStorage.getItem("DG_Line_3");
     document.getElementById("DD_Line_3").innerHTML = localStorage.getItem("DD_Line_3");
+    
+    populateGeneralLineStat();
 });
 
 window.addEventListener("beforeunload", function (e) {
