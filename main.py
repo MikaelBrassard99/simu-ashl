@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 import sqlite3
 
+
+
 app = Flask(__name__, template_folder='template', static_folder='static')
 
 data = None
@@ -106,7 +108,6 @@ def updateLine():
     querySelectedTeamLine = f'SELECT TeamProInfo.Number, TeamProInfo.Name, TeamProLines.Line15vs5ForwardCenter, TeamProLines.Line15vs5ForwardLeftWing, TeamProLines.Line15vs5ForwardRightWing, TeamProLines.Line15vs5DefenseDefense1, TeamProLines.Line15vs5DefenseDefense2, TeamProLines.Line25vs5ForwardCenter, TeamProLines.Line25vs5ForwardLeftWing, TeamProLines.Line25vs5ForwardRightWing, TeamProLines.Line25vs5DefenseDefense1, TeamProLines.Line25vs5DefenseDefense2, TeamProLines.Line35vs5ForwardCenter, TeamProLines.Line35vs5ForwardLeftWing, TeamProLines.Line35vs5ForwardRightWing, TeamProLines.Line35vs5DefenseDefense1, TeamProLines.Line35vs5DefenseDefense2, TeamProLines.Line45vs5ForwardCenter, TeamProLines.Line45vs5ForwardLeftWing, TeamProLines.Line45vs5ForwardRightWing FROM TeamProInfo LEFT JOIN TeamProLines ON TeamProInfo.Number = TeamProLines.TeamNumber WHERE TeamProLines.Day = 1 and TeamProInfo.Name = "{teamName}"' 
 
     df_PlayerStatsFromTeam = pd.read_sql(querySelectedTeamLine, conn)
-    print(df_PlayerStatsFromTeam)
 
     conn.close() 
     #show all player of the team where the player is at
