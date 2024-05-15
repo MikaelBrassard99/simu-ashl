@@ -144,6 +144,8 @@ function getSelectedTeamValue(e) {
 
         document.getElementById("DG_Line_3").innerHTML = rcvData.Line35vs5DefenseDefense1;
         document.getElementById("DD_Line_3").innerHTML = rcvData.Line35vs5DefenseDefense2;
+        
+        populateGeneralLineStat();
 
         $("#result").text("Processed value: " + value);
         synchRadarChart();
@@ -397,12 +399,6 @@ function getValueFromdef(playerNames, provider) {
           div.innerHTML = Math.round((player1StatFiltered[i] + player2StatFiltered[i]) / 2);
         }
       }
-      else {
-        for (let i = 0; i < labels.length; i++) {
-          var div = document.getElementById(`${labels[i]}_${provider}`)
-          div.innerHTML = '';
-        }
-      }
     }
   });
 }
@@ -531,7 +527,8 @@ function choiceOnPlayer(e) {
     if (confirm("OK: montrer les statistiques, Cancel: supprimer le joueur")) {
       event_getValuePlayer(this.innerHTML);
     } else {
-      this.innerHTML = "";
+      this.innerHTML = '';
+      populateGeneralLineStat();
     }
   }
 }
