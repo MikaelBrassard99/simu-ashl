@@ -66,10 +66,10 @@ def draft():
     
     pd.options.display.float_format = '{:,.0f}'.format
     df_gen = pd.read_sql(queryGeneral, conn)
-    falseSerie = ([False] * (df_gen.shape[0]))
-    df_gen.insert(2, 'isPicked', falseSerie, True)
+    dataSerie = ([''] * (df_gen.shape[0]))
+    df_gen.insert(2, 'isPicked', dataSerie, True)
     
-    df_styled = df_gen.to_html(classes='sortable').replace('<td>', '<td align="middle">').replace('<th>', '<th align="middle">')
+    df_styled = df_gen.to_html(classes='sortable').replace('<td>', '<td align="middle">').replace('<th>', '<th align="middle">').replace('<tr>', '<tr class="tr_table">')
     return render_template('draft.html', data = df_styled)
 
 #***********************REGARDER comment handle les joueurs intouvés**********************    
