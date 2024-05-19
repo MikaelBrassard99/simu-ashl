@@ -26,7 +26,6 @@ break;
 var tables = document.querySelectorAll('.table-wrap');
 tables.forEach(function (table) {
   table.addEventListener("click", function (e) {
-    console.log(e);
     try {
       function findElementRecursive(element, tag) {
         return element.nodeName === tag
