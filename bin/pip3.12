@@ -1,4 +1,4 @@
-#!/home/mb/simu-ashl/bin/python3.12
+#!/home/pc-mik/simu-ashl/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
