@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
     checkbox.setAttribute("type", "checkbox");
     checkbox.setAttribute("class", "checkbox");
     checkbox.setAttribute("id", count);
+    checkbox.checked = localStorage.getItem(count);
+    checkbox.addEventListener('change', whenCheked);
     item.children[3].appendChild(checkbox);
     for (i = 0; i < item.children.length; i++) {
       item.children[i].classList.add("tablerow:", count);
@@ -14,14 +16,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
   });
 });
 
-var checks = document.querySelectorAll('.checkbox');
-checks.forEach(function (check) {
-  console.log(check);
-  check.addEventListener('change', (event) => {
-    if (event.currentTarget.checked) {
-      alert('checked');
-    } else {
-      alert('not checked');
-    }
-  });
-});
+function whenCheked(){
+  if(this.checked){
+    localStorage.setItem(this.id,this.checked);
+  }else{
+    localStorage.removeItem(this.id);
+  }
+}
