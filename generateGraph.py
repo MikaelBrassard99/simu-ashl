@@ -13,7 +13,7 @@ from bokeh.models import CheckboxButtonGroup, CustomJS
 
 
 
-con = sqlite3.connect('ASHL13-STHS.db')
+con = sqlite3.connect('ASHL14-STHS.db')
 data_frame_forward = pd.read_sql_query('Select * from PlayerInfo where Retire == "False" and (PosC == "True" or PosLW == "True" or PosRW == "True")', con)
 data_frame_defence = pd.read_sql_query('Select * from PlayerInfo where Retire == "False" and PosD == "True"', con)
 
@@ -105,5 +105,5 @@ plot_def.yaxis.axis_label = 'Somme des statistiques selectionnées'
 
 plot_def.scatter(x='SalaryCap', y='St_Mik_def',line_color=color_def, size=5, source=source_def)
 plot_def.add_layout(color_bar_def, 'right')
-output_file(filename="/home/mb/simu-ashl/template/billy_beane.html", title="ASHL DATA FILE")
+output_file(filename="/home/ubuntu-mik/simu-ashl/template/billy_beane.html", title="ASHL DATA FILE")
 show(column(checkbox_button_group,plot,checkbox_button_group_def,plot_def))

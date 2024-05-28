@@ -149,6 +149,8 @@
         <!-- Lines Div -->
         <div class='child'>
             <p>*double click pour voir les statistiques du joueur*</p>
+            <p style="flex-basis: 20%;">Le salaire total est:</p>
+            <p id="tot_player_salary" style="flex-basis: 20%;"></p>
             <table>
                 <th>
                     <tr>
@@ -310,9 +312,9 @@
                 <th>
                     <tr>
                         <table id="table_line">
-                            <th colspan="14">Moyenne Attaquants</th>
+                            <th colspan="15">Moyenne Attaquants</th>
                             <tr>
-                                <td colspan="14">Ligne 1</td>
+                                <td colspan="15">Ligne 1</td>
                             </tr>
                             <tr>
                                 <th scope="col">FO</th>
@@ -329,6 +331,7 @@
                                 <th scope="col">EX</th>
                                 <th scope="col">LD</th>
                                 <th scope="col">DI</th>
+                                <th scope="col">$</th>
                             </tr>
                             <tr>
                                 <td>
@@ -373,9 +376,12 @@
                                 <td>
                                     <div id="DI_Line_1"></div>
                                 </td>
+                                <td>
+                                    <div id="Salary_Line_1"></div>
+                                </td>
                             </tr>
                             <tr>
-                                <td colspan="14">Ligne 2</td>
+                                <td colspan="15">Ligne 2</td>
                             </tr>
                             <tr>
                                 <th scope="col">FO</th>
@@ -392,6 +398,7 @@
                                 <th scope="col">EX</th>
                                 <th scope="col">LD</th>
                                 <th scope="col">DI</th>
+                                <th scope="col">$</th>
                             </tr>
                             <tr>
                                 <td>
@@ -436,9 +443,12 @@
                                 <td>
                                     <div id="DI_Line_2"></div>
                                 </td>
+                                <td>
+                                    <div id="Salary_Line_2"></div>
+                                </td>
                             </tr>
                             <tr>
-                                <td colspan="14">Ligne 3</td>
+                                <td colspan="15">Ligne 3</td>
                             </tr>
                             <tr>
                                 <th scope="col">FO</th>
@@ -455,6 +465,7 @@
                                 <th scope="col">EX</th>
                                 <th scope="col">LD</th>
                                 <th scope="col">DI</th>
+                                <th scope="col">$</th>
                             </tr>
                             <tr>
                                 <td>
@@ -499,9 +510,12 @@
                                 <td>
                                     <div id="DI_Line_3"></div>
                                 </td>
+                                <td>
+                                    <div id="Salary_Line_3"></div>
+                                </td>
                             </tr>
                             <tr>
-                                <td colspan="14">Ligne 4</td>
+                                <td colspan="15">Ligne 4</td>
                             </tr>
                             <tr>
                                 <th scope="col">FO</th>
@@ -518,6 +532,7 @@
                                 <th scope="col">EX</th>
                                 <th scope="col">LD</th>
                                 <th scope="col">DI</th>
+                                <th scope="col">$</th>
                             </tr>
                             <tr>
                                 <td>
@@ -562,12 +577,15 @@
                                 <td>
                                     <div id="DI_Line_4"></div>
                                 </td>
+                                <td>
+                                    <div id="Salary_Line_4"></div>
+                                </td>
                             </tr>
                         </table>
                         <table id="table_line">
-                            <th colspan="14">Moyenne Defenseurs</th>
+                            <th colspan="15">Moyenne Defenseurs</th>
                             <tr>
-                                <td colspan="14">Paire 1</td>
+                                <td colspan="15">Paire 1</td>
                             </tr>
                             <tr>
                                 <th scope="col">FO</th>
@@ -584,6 +602,7 @@
                                 <th scope="col">EX</th>
                                 <th scope="col">LD</th>
                                 <th scope="col">DI</th>
+                                <th scope="col">$</th>
                             </tr>
                             <tr>
                                 <td>
@@ -628,9 +647,12 @@
                                 <td>
                                     <div id="DI_Paire_1"></div>
                                 </td>
+                                <td>
+                                    <div id="Salary_Paire_1"></div>
+                                </td>
                             </tr>
                             <tr>
-                                <td colspan="14">Paire 2</td>
+                                <td colspan="15">Paire 2</td>
                             </tr>
                             <tr>
                                 <th scope="col">FO</th>
@@ -647,6 +669,7 @@
                                 <th scope="col">EX</th>
                                 <th scope="col">LD</th>
                                 <th scope="col">DI</th>
+                                <th scope="col">$</th>
                             </tr>
                             <tr>
                                 <td>
@@ -691,9 +714,12 @@
                                 <td>
                                     <div id="DI_Paire_2"></div>
                                 </td>
+                                <td>
+                                    <div id="Salary_Paire_2"></div>
+                                </td>
                             </tr>
                             <tr>
-                                <td colspan="14">Paire 3</td>
+                                <td colspan="15">Paire 3</td>
                             </tr>
                             <tr>
                                 <th scope="col">FO</th>
@@ -710,6 +736,7 @@
                                 <th scope="col">EX</th>
                                 <th scope="col">LD</th>
                                 <th scope="col">DI</th>
+                                <th scope="col">$</th>
                             </tr>
                             <tr>
                                 <td>
@@ -753,6 +780,9 @@
                                 </td>
                                 <td>
                                     <div id="DI_Paire_3"></div>
+                                </td>
+                                <td>
+                                    <div id="Salary_Paire_3"></div>
                                 </td>
                             </tr>
                         </table>

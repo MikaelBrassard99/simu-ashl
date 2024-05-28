@@ -375,9 +375,14 @@ function getValueFromPlayer(playerNames, provider) {
           player1StatFiltered[i] = player1Stat[labels[i]];
           player2StatFiltered[i] = player2Stat[labels[i]];
           player3StatFiltered[i] = player3Stat[labels[i]];
-          var div = document.getElementById(`${labels[i]}_${provider}`)
-          div.innerHTML = Math.round((player1StatFiltered[i] + player2StatFiltered[i] + player3StatFiltered[i]) / 3);
+          var div_stat = document.getElementById(`${labels[i]}_${provider}`)
+          div_stat.innerHTML = Math.round((player1StatFiltered[i] + player2StatFiltered[i] + player3StatFiltered[i]) / 3);
         }
+        var div_salary = document.getElementById(`Salary_${provider}`)
+        div_salary.innerHTML = (player1Stat['SalaryAverage']+player2Stat['SalaryAverage']+player3Stat['SalaryAverage']);
+        
+        var div_tot_salary = document.getElementById('tot_player_salary');
+        div_tot_salary.innerHTML = (Number(document.getElementById('Salary_Line_1').innerHTML)+Number(document.getElementById('Salary_Line_2').innerHTML)+Number(document.getElementById('Salary_Line_3').innerHTML)+Number(document.getElementById('Salary_Line_4').innerHTML)+Number(document.getElementById('Salary_Paire_1').innerHTML)+Number(document.getElementById('Salary_Paire_2').innerHTML)+Number(document.getElementById('Salary_Paire_3').innerHTML));
       }
     }
   });
@@ -395,9 +400,14 @@ function getValueFromdef(playerNames, provider) {
         for (let i = 0; i < labels.length; i++) {
           player1StatFiltered[i] = player1Stat[labels[i]];
           player2StatFiltered[i] = player2Stat[labels[i]];
-          var div = document.getElementById(`${labels[i]}_${provider}`)
-          div.innerHTML = Math.round((player1StatFiltered[i] + player2StatFiltered[i]) / 2);
+          var div_stat = document.getElementById(`${labels[i]}_${provider}`)
+          div_stat.innerHTML = Math.round((player1StatFiltered[i] + player2StatFiltered[i]) / 2);
         }
+        var div_salary = document.getElementById(`Salary_${provider}`)
+        div_salary.innerHTML = (player1Stat['SalaryAverage']+player2Stat['SalaryAverage']);
+
+        var div_tot_salary = document.getElementById('tot_player_salary');
+        div_tot_salary.innerHTML = (Number(document.getElementById('Salary_Line_1').innerHTML)+Number(document.getElementById('Salary_Line_2').innerHTML)+Number(document.getElementById('Salary_Line_3').innerHTML)+Number(document.getElementById('Salary_Line_4').innerHTML)+Number(document.getElementById('Salary_Paire_1').innerHTML)+Number(document.getElementById('Salary_Paire_2').innerHTML)+Number(document.getElementById('Salary_Paire_3').innerHTML));
       }
     }
   });
@@ -412,6 +422,8 @@ function populateGeneralLineStat(){
       for (let i = 0; i < labels.length; i++) {
         var div = document.getElementById(`${labels[i]}_Line_1`)
         div.innerHTML = '';
+        var div_tot_salary = document.getElementById('Salary_Line_1');
+        div_tot_salary.innerHTML = '';
       }
     }
   //verify if line 2 is full and populate grid stats
@@ -422,6 +434,8 @@ function populateGeneralLineStat(){
     for (let i = 0; i < labels.length; i++) {
       var div = document.getElementById(`${labels[i]}_Line_2`)
       div.innerHTML = '';
+      var div_tot_salary = document.getElementById('Salary_Line_2');
+      div_tot_salary.innerHTML = '';
     }
   }
   //verify if line 3 is full and populate grid stats
@@ -432,6 +446,8 @@ function populateGeneralLineStat(){
     for (let i = 0; i < labels.length; i++) {
       var div = document.getElementById(`${labels[i]}_Line_3`)
       div.innerHTML = '';
+      var div_tot_salary = document.getElementById('Salary_Line_3');
+      div_tot_salary.innerHTML = '';
     }
   }
   //verify if line 4 is full and populate grid stats
@@ -442,6 +458,8 @@ function populateGeneralLineStat(){
     for (let i = 0; i < labels.length; i++) {
       var div = document.getElementById(`${labels[i]}_Line_4`)
       div.innerHTML = '';
+      var div_tot_salary = document.getElementById('Salary_Line_4');
+      div_tot_salary.innerHTML = '';
     }
   }
   //verify if Line 1 is full and populate grid stats
@@ -452,6 +470,8 @@ function populateGeneralLineStat(){
     for (let i = 0; i < labels.length; i++) {
       var div = document.getElementById(`${labels[i]}_Paire_1`)
       div.innerHTML = '';
+      var div_tot_salary = document.getElementById('Salary_Paire_1');
+      div_tot_salary.innerHTML = '';
     }
   }
   //verify if Line 1 is full and populate grid stats
@@ -462,6 +482,8 @@ function populateGeneralLineStat(){
     for (let i = 0; i < labels.length; i++) {
       var div = document.getElementById(`${labels[i]}_Paire_2`)
       div.innerHTML = '';
+      var div_tot_salary = document.getElementById('Salary_Paire_2');
+      div_tot_salary.innerHTML = '';
     }
   }
   //verify if Line 1 is full and populate grid stats
@@ -472,6 +494,8 @@ function populateGeneralLineStat(){
     for (let i = 0; i < labels.length; i++) {
       var div = document.getElementById(`${labels[i]}_Paire_3`)
       div.innerHTML = '';
+      var div_tot_salary = document.getElementById('Salary_Paire_3');
+      div_tot_salary.innerHTML = '';
     }
   }
 }
