@@ -35,7 +35,6 @@ bd_draft = 'ashl2024_draft.db'
 def allStats():
   
     conn = sqlite3.connect(bd)
-    conn2 = sqlite3.connect(bd2)
 
     #sql query to match PalyerInfo and PlayerStat who play Pro(status > 1) and have played a minimum of MinimumGamePlayed in config_bd variable
     queryGeneralPlayer = 'SELECT PlayerProStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PlayerProStat.GP, PlayerProStat.Shots, PlayerProStat.G, PlayerProStat.A, PlayerProStat.P, PlayerProStat.PlusMinus, PlayerProStat.Pim, PlayerProStat.ShotsBlock, PlayerProStat.OwnShotsBlock, PlayerProStat.OwnShotsMissGoal, PlayerProStat.Hits, PlayerProStat.HitsTook, PlayerProStat.GW, PlayerProStat.GT, PlayerProStat.FaceOffWon, PlayerProStat.FaceOffTotal, PlayerProStat.PPG, PlayerProStat.PPA, PlayerProStat.PPP, PlayerProStat.PPShots, PlayerProStat.PKG, PlayerProStat.PKA, PlayerProStat.PKP, PlayerProStat.PKShots, PlayerProStat.GiveAway, PlayerProStat.TakeAway, PlayerProStat.PuckPossesionTime  FROM PlayerProStat LEFT JOIN PlayerInfo ON PlayerProStat.Number = PlayerInfo.Number where PlayerInfo.Status1 > 1 ORDER BY PlayerInfo.Name'
@@ -44,7 +43,7 @@ def allStats():
     #queryGeneral = 'SELECT PlayerProStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PlayerProStat.GP, PlayerProStat.Shots, PlayerProStat.G, PlayerProStat.A, PlayerProStat.P, PlayerProStat.PlusMinus, PlayerProStat.Pim, PlayerProStat.ShotsBlock, PlayerProStat.OwnShotsBlock, PlayerProStat.OwnShotsMissGoal, PlayerProStat.Hits, PlayerProStat.HitsTook, PlayerProStat.GW, PlayerProStat.GT, PlayerProStat.FaceOffWon, PlayerProStat.FaceOffTotal, PlayerProStat.PPG, PlayerProStat.PPA, PlayerProStat.PPP, PlayerProStat.PPShots, PlayerProStat.PKG, PlayerProStat.PKA, PlayerProStat.PKP, PlayerProStat.PKShots, PlayerProStat.GiveAway, PlayerProStat.TakeAway, PlayerProStat.PuckPossesionTime  FROM PlayerProStat LEFT JOIN PlayerInfo ON PlayerProStat.Number = PlayerInfo.Number where PlayerProStat.GP <> 0 and PlayerInfo.Status1 > 1 ORDER BY PlayerInfo.Name' 
     queryTeam = 'SELECT TeamProInfo.Number, TeamProInfo.Name from TeamProInfo' 
 
-    df_goalie = pd.read_sql(queryGeneralGoalie, conn2)
+    df_goalie = pd.read_sql(queryGeneralGoalie, conn)
     df_gen = pd.read_sql(queryGeneralPlayer, conn)
     df_team = pd.read_sql(queryTeam, conn)
 
@@ -56,7 +55,6 @@ def allStats():
     df_Def = pd.read_sql(queryDefence, conn)
         
     conn.close()
-    conn2.close()  
     return render_template("allStats.html", goalie_league_data=df_goalie, player_league_data=df_gen, team_data=df_team, average_Def=generateOVStats(df_Def), average_Fwd=generateOVStats(df_Fwd), avg_league_stat_fwd=generateStats(df_Fwd, generalStatsColumns)[1], avg_league_stat_def=generateStats(df_Def, generalStatsColumns)[1], label_min_played_game = config_bd["MinimumGamePlayed"])
         # Handle other request methods
 @app.route("/graphChart")
