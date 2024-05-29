@@ -12,7 +12,24 @@
         <div class="menu">
             <input class="playerSel" placeholder="Enter player name here" name="name" list="playerSelected" />
             <datalist id="playerSelected">
-                {% for index, row in league_data.iterrows() %}
+                {% for index, row in player_league_data.iterrows() %}
+                <option value="{{ row['Name'] }}">
+                    {{ row['Name'] }}
+                </option>
+                {% endfor %}
+            </datalist>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <div style="display: flex; justify-content: space-between;">
+            <p style="flex-basis: 49.5%;">Selectionnez un gardien à ajouter à la visibilité</p>
+            <p id="GoalieName" style="flex-basis: 49.5%;"></p>
+        </div>
+        <div class="menu">
+            <input class="goalieSel" placeholder="Enter goalie name here" name="name" list="goalieSelected" />
+            <datalist id="goalieSelected">
+                {% for index, row in goalie_league_data.iterrows() %}
                 <option value="{{ row['Name'] }}">
                     {{ row['Name'] }}
                 </option>
@@ -143,7 +160,7 @@
             <canvas id="radarChart"></canvas>
         </div>
         <!-- PlayerSel Div -->
-        <div id="playerSel" class="child">
+        <div id="elemSel" class="child">
             <p>*double click pour supprimer le joueur*</p>
         </div>
         <!-- Lines Div -->
@@ -164,13 +181,13 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <div id="LW_Line_1" draggable="true" class="box"></div>
+                                    <div id="LW_Line_1" draggable="true" class="box" data-status="player"></div>
                                 </td>
                                 <td>
-                                    <div id="C_Line_1" draggable="true" class="box"></div>
+                                    <div id="C_Line_1" draggable="true" class="box" data-status="player"></div>
                                 </td>
                                 <td>
-                                    <div id="RW_Line_1" draggable="true" class="box"></div>
+                                    <div id="RW_Line_1" draggable="true" class="box" data-status="player"></div>
                                 </td>
                             </tr>
                             <tr>
@@ -183,13 +200,13 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <div id="LW_Line_2" draggable="true" class="box"></div>
+                                    <div id="LW_Line_2" draggable="true" class="box" data-status="player"></div>
                                 </td>
                                 <td>
-                                    <div id="C_Line_2" draggable="true" class="box"></div>
+                                    <div id="C_Line_2" draggable="true" class="box" data-status="player"></div>
                                 </td>
                                 <td>
-                                    <div id="RW_Line_2" draggable="true" class="box"></div>
+                                    <div id="RW_Line_2" draggable="true" class="box" data-status="player"></div>
                                 </td>
                             </tr>
                             <tr>
@@ -202,13 +219,13 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <div id="LW_Line_3" draggable="true" class="box"></div>
+                                    <div id="LW_Line_3" draggable="true" class="box" data-status="player"></div>
                                 </td>
                                 <td>
-                                    <div id="C_Line_3" draggable="true" class="box"></div>
+                                    <div id="C_Line_3" draggable="true" class="box" data-status="player"></div>
                                 </td>
                                 <td>
-                                    <div id="RW_Line_3" draggable="true" class="box"></div>
+                                    <div id="RW_Line_3" draggable="true" class="box" data-status="player"></div>
                                 </td>
                             </tr>
                             <tr>
@@ -221,13 +238,13 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <div id="LW_Line_4" draggable="true" class="box"></div>
+                                    <div id="LW_Line_4" draggable="true" class="box" data-status="player"></div>
                                 </td>
                                 <td>
-                                    <div id="C_Line_4" draggable="true" class="box"></div>
+                                    <div id="C_Line_4" draggable="true" class="box" data-status="player"></div>
                                 </td>
                                 <td>
-                                    <div id="RW_Line_4" draggable="true" class="box"></div>
+                                    <div id="RW_Line_4" draggable="true" class="box" data-status="player"></div>
                                 </td>
                             </tr>
                         </table>
@@ -242,10 +259,10 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <div id="DG_Line_1" draggable="true" class="box"></div>
+                                    <div id="DG_Line_1" draggable="true" class="box" data-status="player"></div>
                                 </td>
                                 <td>
-                                    <div id="DD_Line_1" draggable="true" class="box"></div>
+                                    <div id="DD_Line_1" draggable="true" class="box" data-status="player"></div>
                                 </td>
                             </tr>
                             <tr>
@@ -257,10 +274,10 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <div id="DG_Line_2" draggable="true" class="box"></div>
+                                    <div id="DG_Line_2" draggable="true" class="box" data-status="player"></div>
                                 </td>
                                 <td>
-                                    <div id="DD_Line_2" draggable="true" class="box"></div>
+                                    <div id="DD_Line_2" draggable="true" class="box" data-status="player"></div>
                                 </td>
                             </tr>
                             <tr>
@@ -272,16 +289,16 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <div id="DG_Line_3" draggable="true" class="box"></div>
+                                    <div id="DG_Line_3" draggable="true" class="box" data-status="player"></div>
                                 </td>
                                 <td>
-                                    <div id="DD_Line_3" draggable="true" class="box"></div>
+                                    <div id="DD_Line_3" draggable="true" class="box" data-status="player"></div>
                                 </td>
                             </tr>
                         </table>
 
                         <table id="table_line">
-                            <th>Gardiens</th>
+                            <th colspan="2">Gardiens</th>
                             <tr>
                                 <th scope="col">
                                     #1
@@ -292,10 +309,10 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <div draggable="true" class="box"></div>
+                                    <div id="G_1" draggable="true" class="box" data-status="goalie"></div>
                                 </td>
                                 <td>
-                                    <div draggable="true" class="box"></div>
+                                    <div id="G_2" draggable="true" class="box" data-status="goalie"></div>
                                 </td>
                             </tr>
                         </table>

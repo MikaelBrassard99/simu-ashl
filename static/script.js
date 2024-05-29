@@ -64,9 +64,11 @@ let playerChart = new Chart("radarChart", {
 
 //get selected value from playerName scoll
 const inputPlayer = document.querySelector(".playerSel");
+const inputGoalie = document.querySelector(".goalieSel");
 const inputTeam = document.querySelector(".teamSel");
 
 inputPlayer.addEventListener("change", getSelectedPlayerValue);
+inputGoalie.addEventListener("change", getSelectedGoalieValue);
 inputTeam.addEventListener("change", getSelectedTeamValue);
 
 function getSelectedPlayerValue(e) {
@@ -83,6 +85,7 @@ function getSelectedPlayerValue(e) {
         div.innerHTML = value;
         div.draggable = "true";
         div.className = "box2";
+        div.dataset.status = "player"; 
         div.id = value.replace(/\s/g, '')
         div.addEventListener('dragstart', handleDragStart);
         div.addEventListener('dragover', handleDragOver);
@@ -97,11 +100,50 @@ function getSelectedPlayerValue(e) {
           var node = document.getElementById(value.replace(/\s/g, '')).firstChild;  // Get the first child node of the first list
         }
         catch {
-          document.getElementById("playerSel").appendChild(div);
+          document.getElementById("elemSel").appendChild(div);
         }
 
         $("#result").text("Processed value: " + value);
         synchRadarChart();
+      },
+      error: function (xhr, status, error) { },
+    });
+  });
+}
+function getSelectedGoalieValue(e) {
+  $(document).ready(function () {
+    var div = document.createElement("div");
+    let value = e.target.value;
+    $.ajax({
+      url: "/updateChartGoalie",
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(value),
+      success: function (response) {
+        //create a drag and drop div of the player selected
+        div.innerHTML = value;
+        div.draggable = "true";
+        div.className = "box2";
+        div.dataset.status = "goalie"; 
+        div.id = value.replace(/\s/g, '')
+        div.addEventListener('dragstart', handleDragStart);
+        div.addEventListener('dragover', handleDragOver);
+        div.addEventListener('dragenter', handleDragEnter);
+        div.addEventListener('dragleave', handleDragLeave);
+        div.addEventListener('dragend', handleDragEnd);
+        div.addEventListener('drop', handleDrop);
+        div.addEventListener("dblclick", handleDblClick);
+        //div.addEventListener('mouseover', getValueFromPlayer)
+        //verify if already an element at this id. if not, create one, if true dont do anything
+        try {
+          var node = document.getElementById(value.replace(/\s/g, '')).firstChild;  // Get the first child node of the first list
+        }
+        catch {
+          document.getElementById("elemSel").appendChild(div);
+        }
+
+        $("#result").text("Processed value: " + value);
+        //synchRadarChart();
       },
       error: function (xhr, status, error) { },
     });
@@ -518,8 +560,10 @@ function handleDrop(e) {
   e.stopPropagation();
 
   if (dragSrcEl !== this) {
-    dragSrcEl.innerHTML = this.innerHTML;
-    this.innerHTML = e.dataTransfer.getData('text/html');
+    if(dragSrcEl.dataset.status == this.dataset.status){
+      dragSrcEl.innerHTML = this.innerHTML;
+      this.innerHTML = e.dataTransfer.getData('text/html');
+    }
   }
   populateGeneralLineStat();
   return false;
@@ -549,7 +593,9 @@ function handleDragLeave(e) {
 function choiceOnPlayer(e) {
   if(this.innerHTML != ''){
     if (confirm("OK: montrer les statistiques, Cancel: supprimer le joueur")) {
-      event_getValuePlayer(this.innerHTML);
+      if(this.dataset.status == "player"){
+        event_getValuePlayer(this.innerHTML);
+      }
     } else {
       this.innerHTML = '';
       populateGeneralLineStat();
@@ -593,6 +639,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
   
     document.getElementById("DG_Line_3").innerHTML = localStorage.getItem("DG_Line_3");
     document.getElementById("DD_Line_3").innerHTML = localStorage.getItem("DD_Line_3");
+
+    document.getElementById("G_1").innerHTML = localStorage.getItem("G_1");
+    document.getElementById("G_2").innerHTML = localStorage.getItem("G_2");
     
     populateGeneralLineStat();
 });
@@ -620,5 +669,8 @@ window.addEventListener("beforeunload", function (e) {
   localStorage.setItem("DD_Line_2", document.getElementById("DD_Line_2").innerHTML);
 
   localStorage.setItem("DG_Line_3", document.getElementById("DG_Line_3").innerHTML);
-  localStorage.setItem("DD_Line_3", document.getElementById("DD_Line_3").innerHTML); 
+  localStorage.setItem("DD_Line_3", document.getElementById("DD_Line_3").innerHTML);
+
+  localStorage.setItem("G_1", document.getElementById("G_1").innerHTML);
+  localStorage.setItem("G_2", document.getElementById("G_2").innerHTML);
 });

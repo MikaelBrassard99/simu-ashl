@@ -17,6 +17,8 @@ config_bd = {
 
 
 bd = 'ASHL14-STHS.db'
+bd2 = 'ASHL13-STHS.db'
+
 bd_draft = 'ashl2024_draft.db'
 
 # @app.after_request
@@ -33,13 +35,17 @@ bd_draft = 'ashl2024_draft.db'
 def allStats():
   
     conn = sqlite3.connect(bd)
+    conn2 = sqlite3.connect(bd2)
 
     #sql query to match PalyerInfo and PlayerStat who play Pro(status > 1) and have played a minimum of MinimumGamePlayed in config_bd variable
-    queryGeneral = 'SELECT PlayerProStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PlayerProStat.GP, PlayerProStat.Shots, PlayerProStat.G, PlayerProStat.A, PlayerProStat.P, PlayerProStat.PlusMinus, PlayerProStat.Pim, PlayerProStat.ShotsBlock, PlayerProStat.OwnShotsBlock, PlayerProStat.OwnShotsMissGoal, PlayerProStat.Hits, PlayerProStat.HitsTook, PlayerProStat.GW, PlayerProStat.GT, PlayerProStat.FaceOffWon, PlayerProStat.FaceOffTotal, PlayerProStat.PPG, PlayerProStat.PPA, PlayerProStat.PPP, PlayerProStat.PPShots, PlayerProStat.PKG, PlayerProStat.PKA, PlayerProStat.PKP, PlayerProStat.PKShots, PlayerProStat.GiveAway, PlayerProStat.TakeAway, PlayerProStat.PuckPossesionTime  FROM PlayerProStat LEFT JOIN PlayerInfo ON PlayerProStat.Number = PlayerInfo.Number where PlayerInfo.Status1 > 1 ORDER BY PlayerInfo.Name' 
+    queryGeneralPlayer = 'SELECT PlayerProStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PlayerProStat.GP, PlayerProStat.Shots, PlayerProStat.G, PlayerProStat.A, PlayerProStat.P, PlayerProStat.PlusMinus, PlayerProStat.Pim, PlayerProStat.ShotsBlock, PlayerProStat.OwnShotsBlock, PlayerProStat.OwnShotsMissGoal, PlayerProStat.Hits, PlayerProStat.HitsTook, PlayerProStat.GW, PlayerProStat.GT, PlayerProStat.FaceOffWon, PlayerProStat.FaceOffTotal, PlayerProStat.PPG, PlayerProStat.PPA, PlayerProStat.PPP, PlayerProStat.PPShots, PlayerProStat.PKG, PlayerProStat.PKA, PlayerProStat.PKP, PlayerProStat.PKShots, PlayerProStat.GiveAway, PlayerProStat.TakeAway, PlayerProStat.PuckPossesionTime  FROM PlayerProStat LEFT JOIN PlayerInfo ON PlayerProStat.Number = PlayerInfo.Number where PlayerInfo.Status1 > 1 ORDER BY PlayerInfo.Name'
+    queryGeneralGoalie = 'SELECT GoalerProStat.Name, GoalerInfo.TeamName, GoalerInfo.SalaryAverage, GoalerInfo.SK, GoalerInfo.DU, GoalerInfo.EN, GoalerInfo.SZ, GoalerInfo.AG, GoalerInfo.RB, GoalerInfo.SC, GoalerInfo.HS, GoalerInfo.RT, GoalerInfo.PH, GoalerInfo.PS, GoalerInfo.EX, GoalerInfo.LD, GoalerInfo.PO, GoalerProStat.GP, GoalerProStat.W, GoalerProStat.L, GoalerProStat.OTL, GoalerProStat.Shootout, GoalerProStat.GA, GoalerProStat.SA, GoalerProStat.SARebound, GoalerProStat.PenalityShotsShots, GoalerProStat.PenalityShotsGoals, GoalerProStat.StartGoaler, GoalerProStat.BackupGoaler, GoalerProStat.Star1, GoalerProStat.Star2, GoalerProStat.Star3 FROM GoalerProStat LEFT JOIN GoalerInfo ON GoalerProStat.Number = GoalerInfo.Number where GoalerInfo.Status1 > 1 ORDER BY GoalerInfo.Name' 
+
     #queryGeneral = 'SELECT PlayerProStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PlayerProStat.GP, PlayerProStat.Shots, PlayerProStat.G, PlayerProStat.A, PlayerProStat.P, PlayerProStat.PlusMinus, PlayerProStat.Pim, PlayerProStat.ShotsBlock, PlayerProStat.OwnShotsBlock, PlayerProStat.OwnShotsMissGoal, PlayerProStat.Hits, PlayerProStat.HitsTook, PlayerProStat.GW, PlayerProStat.GT, PlayerProStat.FaceOffWon, PlayerProStat.FaceOffTotal, PlayerProStat.PPG, PlayerProStat.PPA, PlayerProStat.PPP, PlayerProStat.PPShots, PlayerProStat.PKG, PlayerProStat.PKA, PlayerProStat.PKP, PlayerProStat.PKShots, PlayerProStat.GiveAway, PlayerProStat.TakeAway, PlayerProStat.PuckPossesionTime  FROM PlayerProStat LEFT JOIN PlayerInfo ON PlayerProStat.Number = PlayerInfo.Number where PlayerProStat.GP <> 0 and PlayerInfo.Status1 > 1 ORDER BY PlayerInfo.Name' 
     queryTeam = 'SELECT TeamProInfo.Number, TeamProInfo.Name from TeamProInfo' 
 
-    df_gen = pd.read_sql(queryGeneral, conn)
+    df_goalie = pd.read_sql(queryGeneralGoalie, conn2)
+    df_gen = pd.read_sql(queryGeneralPlayer, conn)
     df_team = pd.read_sql(queryTeam, conn)
 
     #config_bd["MinimumGamePlayed"] = ((df_gen['GP'].max()/2))
@@ -49,8 +55,9 @@ def allStats():
     df_Fwd = pd.read_sql(queryForward, conn)
     df_Def = pd.read_sql(queryDefence, conn)
         
-    conn.close() 
-    return render_template("allStats.html", league_data=df_gen, team_data=df_team, average_Def=generateOVStats(df_Def), average_Fwd=generateOVStats(df_Fwd), avg_league_stat_fwd=generateStats(df_Fwd, generalStatsColumns)[1], avg_league_stat_def=generateStats(df_Def, generalStatsColumns)[1], label_min_played_game = config_bd["MinimumGamePlayed"])
+    conn.close()
+    conn2.close()  
+    return render_template("allStats.html", goalie_league_data=df_goalie, player_league_data=df_gen, team_data=df_team, average_Def=generateOVStats(df_Def), average_Fwd=generateOVStats(df_Fwd), avg_league_stat_fwd=generateStats(df_Fwd, generalStatsColumns)[1], avg_league_stat_def=generateStats(df_Def, generalStatsColumns)[1], label_min_played_game = config_bd["MinimumGamePlayed"])
         # Handle other request methods
 @app.route("/graphChart")
 def graphChart():
@@ -91,13 +98,45 @@ def updateChart():
 
     df_PlayerSel = pd.read_sql(querySelectedPlayer, conn)
     
-    teamNameFromPlayerSel = df_PlayerSel['TeamName'][0]
+    try:
+        teamNameFromPlayerSel = df_PlayerSel['TeamName'][0]
+    except:
+        return jsonify(message='player not found'),500
+    
     querySelectedAllPlayerFromTeamId = f'SELECT PlayerProStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PlayerProStat.GP, PlayerProStat.Shots, PlayerProStat.G, PlayerProStat.A, PlayerProStat.P, PlayerProStat.PlusMinus, PlayerProStat.Pim, PlayerProStat.ShotsBlock, PlayerProStat.OwnShotsBlock, PlayerProStat.OwnShotsMissGoal, PlayerProStat.Hits, PlayerProStat.HitsTook, PlayerProStat.GW, PlayerProStat.GT, PlayerProStat.FaceOffWon, PlayerProStat.FaceOffTotal, PlayerProStat.PPG, PlayerProStat.PPA, PlayerProStat.PPP, PlayerProStat.PPShots, PlayerProStat.PKG, PlayerProStat.PKA, PlayerProStat.PKP, PlayerProStat.PKShots, PlayerProStat.GiveAway, PlayerProStat.TakeAway, PlayerProStat.PuckPossesionTime  FROM PlayerProStat LEFT JOIN PlayerInfo ON PlayerProStat.Number = PlayerInfo.Number where PlayerInfo.TeamName = "{teamNameFromPlayerSel}"'
     df_AllPlayerFromTeamId = pd.read_sql(querySelectedAllPlayerFromTeamId, conn)
     #verify if player is D or Fwd
     conn.close() 
     #show all player of the team where the player is at
     response_data = {'values':df_PlayerSel.to_json(orient='records'), 'labels': generalStatsColumns, 'playerSelSorted': generateOVStats(df_PlayerSel).to_json(orient='records'), 'playersFromTeamSel' : generateOVStats(df_AllPlayerFromTeamId).to_json(orient='records')} 
+    return jsonify(response_data)
+
+@app.route("/updateChartGoalie", methods=['GET', 'POST'])
+def updateChartGoalie():
+     
+    try:
+        set_global(request.json)
+    except:
+        print("An exception occurred")  
+
+    if data:
+        querySelectedGoalie = f'SELECT GoalerProStat.Name, GoalerInfo.TeamName, GoalerInfo.SalaryAverage, GoalerInfo.SK, GoalerInfo.DU, GoalerInfo.EN, GoalerInfo.SZ, GoalerInfo.AG, GoalerInfo.RB, GoalerInfo.SC, GoalerInfo.HS, GoalerInfo.RT, GoalerInfo.PH, GoalerInfo.PS, GoalerInfo.EX, GoalerInfo.LD, GoalerInfo.PO, GoalerProStat.GP, GoalerProStat.W, GoalerProStat.L, GoalerProStat.OTL, GoalerProStat.Shootout, GoalerProStat.GA, GoalerProStat.SA, GoalerProStat.SARebound, GoalerProStat.PenalityShotsShots, GoalerProStat.PenalityShotsGoals, GoalerProStat.StartGoaler, GoalerProStat.BackupGoaler, GoalerProStat.Star1, GoalerProStat.Star2, GoalerProStat.Star3 FROM GoalerProStat LEFT JOIN GoalerInfo ON GoalerProStat.Number = GoalerInfo.Number where GoalerInfo.Name = "{data}"'
+
+    else:
+        querySelectedGoalie = 'SELECT GoalerProStat.Name, GoalerInfo.TeamName, GoalerInfo.SalaryAverage, GoalerInfo.SK, GoalerInfo.DU, GoalerInfo.EN, GoalerInfo.SZ, GoalerInfo.AG, GoalerInfo.RB, GoalerInfo.SC, GoalerInfo.HS, GoalerInfo.RT, GoalerInfo.PH, GoalerInfo.PS, GoalerInfo.EX, GoalerInfo.LD, GoalerInfo.PO, GoalerProStat.GP, GoalerProStat.W, GoalerProStat.L, GoalerProStat.OTL, GoalerProStat.Shootout, GoalerProStat.GA, GoalerProStat.SA, GoalerProStat.SARebound, GoalerProStat.PenalityShotsShots, GoalerProStat.PenalityShotsGoals, GoalerProStat.StartGoaler, GoalerProStat.BackupGoaler, GoalerProStat.Star1, GoalerProStat.Star2, GoalerProStat.Star3 FROM GoalerProStat LEFT JOIN GoalerInfo ON GoalerProStat.Number = GoalerInfo.Number where GoalerInfo.Name = "Ken Appleby"' 
+    
+    conn = sqlite3.connect(bd)
+    df_GoalieSel = pd.read_sql(querySelectedGoalie, conn) 
+    
+    try:
+        print(df_GoalieSel)
+        teamNameFromGoalieSel = df_GoalieSel['TeamName'][0]
+    except:
+        return jsonify(message='player not found'),500
+    #verify if player is D or Fwd
+    conn.close() 
+    #show all player of the team where the player is at
+    response_data = {'values':df_GoalieSel.to_json(orient='records')} 
     return jsonify(response_data)
 
 @app.route("/getPlayersStatsFromTeam", methods=['GET', 'POST'])
@@ -138,7 +177,7 @@ def getStat():
     conn = sqlite3.connect(bd)
 
     querySelectedPlayer = f'SELECT PlayerProStat.Name, PlayerInfo.TeamName, PlayerInfo.PosC, PlayerInfo.PosLW, PlayerInfo.PosRW, PlayerInfo.PosD, PlayerInfo.SalaryAverage, PlayerInfo.CK, PlayerInfo.FG, PlayerInfo.DI, PlayerInfo.SK, PlayerInfo.ST, PlayerInfo.EN, PlayerInfo.DU, PlayerInfo.PH, PlayerInfo.FO, PlayerInfo.PA, PlayerInfo.SC, PlayerInfo.DF, PlayerInfo.PS, PlayerInfo.EX, PlayerInfo.LD, PlayerInfo.PO, PlayerProStat.GP, PlayerProStat.Shots, PlayerProStat.G, PlayerProStat.A, PlayerProStat.P, PlayerProStat.PlusMinus, PlayerProStat.Pim, PlayerProStat.ShotsBlock, PlayerProStat.OwnShotsBlock, PlayerProStat.OwnShotsMissGoal, PlayerProStat.Hits, PlayerProStat.HitsTook, PlayerProStat.GW, PlayerProStat.GT, PlayerProStat.FaceOffWon, PlayerProStat.FaceOffTotal, PlayerProStat.PPG, PlayerProStat.PPA, PlayerProStat.PPP, PlayerProStat.PPShots, PlayerProStat.PKG, PlayerProStat.PKA, PlayerProStat.PKP, PlayerProStat.PKShots, PlayerProStat.GiveAway, PlayerProStat.TakeAway, PlayerProStat.PuckPossesionTime  FROM PlayerProStat LEFT JOIN PlayerInfo ON PlayerProStat.Number = PlayerInfo.Number where PlayerInfo.Name = "{playerName}"'  
-
+    
     df_PlayerSel = pd.read_sql(querySelectedPlayer, conn)
     
     teamNameFromPlayerSel = df_PlayerSel['TeamName'][0]
