@@ -9,7 +9,7 @@ from bokeh.models import ColorBar, ColumnDataSource
 from bokeh.palettes import Spectral6
 from bokeh.plotting import figure, output_file, show, save
 from bokeh.transform import linear_cmap
-from bokeh.models import CheckboxButtonGroup, CustomJS
+from bokeh.models import CheckboxButtonGroup, CustomJS, NumericInput
 
 
 
@@ -33,6 +33,7 @@ for columnName in df1.columns:
 
 curdoc().theme = 'dark_minimal'
 source = ColumnDataSource(data=df1)
+numeric_inputOff = NumericInput(value=1, low=18, high=40, title="Enter l'age pour filtre (inferieur a) 18 and 40:")
 LABELS = ["CK", "ST", "DI", "SK", "DF", "PH", "PA", "SC"]
 checkbox_button_group = CheckboxButtonGroup(labels=LABELS, active=[])
 checkbox_button_group.js_on_event("button_click", CustomJS(args=dict(source=source), code="""
@@ -78,6 +79,7 @@ for columnName in df2.columns:
 
 curdoc().theme = 'dark_minimal'
 source_def = ColumnDataSource(data=df2)
+numeric_inputDeff = NumericInput(value=1, low=18, high=40, title="Enter l'age pour filtre (inferieur a) 18 and 40:")
 LABELS_def = ["CK", "ST", "DI", "SK", "DF", "PH", "PA", "SC"]
 checkbox_button_group_def = CheckboxButtonGroup(labels=LABELS_def, active=[])
 checkbox_button_group_def.js_on_event("button_click", CustomJS(args=dict(source=source_def), code="""
@@ -106,4 +108,4 @@ plot_def.yaxis.axis_label = 'Somme des statistiques selectionnées'
 plot_def.scatter(x='SalaryCap', y='St_Mik_def',line_color=color_def, size=5, source=source_def)
 plot_def.add_layout(color_bar_def, 'right')
 output_file(filename="/home/ubuntu-mik/simu-ashl/template/billy_beane.html", title="ASHL DATA FILE")
-show(column(checkbox_button_group,plot,checkbox_button_group_def,plot_def))
+show(column(numeric_inputOff, checkbox_button_group,plot, numeric_inputDeff, checkbox_button_group_def,plot_def))

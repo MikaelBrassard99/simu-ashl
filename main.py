@@ -59,7 +59,7 @@ def allStats():
         # Handle other request methods
 @app.route("/graphChart")
 def graphChart():
-    return render_template("billy_beane.html")
+    return render_template("graph.html")
 
 @app.route("/about")
 def aboutPage():
