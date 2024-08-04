@@ -107,5 +107,5 @@ plot_def.yaxis.axis_label = 'Somme des statistiques selectionnées'
 
 plot_def.scatter(x='SalaryCap', y='St_Mik_def',line_color=color_def, size=5, source=source_def)
 plot_def.add_layout(color_bar_def, 'right')
-output_file(filename="/home/ubuntu-mik/simu-ashl/template/billy_beane.html", title="ASHL DATA FILE")
+output_file(filename="C:/Users/mik/simu-ashl/template/billy_beane.html", title="ASHL DATA FILE")
 show(column(numeric_inputOff, checkbox_button_group,plot, numeric_inputDeff, checkbox_button_group_def,plot_def))
